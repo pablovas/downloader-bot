@@ -8,6 +8,11 @@ const config = require('./config');
 // Criando uma nova instância do bot com o token fornecido
 const bot = new Telegraf(config.botToken);
 
+// Mensagem de bem-vindo
+bot.start((ctx) => {
+  ctx.reply('Bem-vindo! Para baixar um MP3 ou MP4, envie o comando /mp3 ou /mp4 seguido do link do arquivo.');
+});
+
 // Comando para baixar um vídeo em formato mp4
 bot.command('mp4', async (ctx) => {
   // Obtendo a URL do vídeo a partir da mensagem enviada pelo usuário
