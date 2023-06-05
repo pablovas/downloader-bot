@@ -1,36 +1,8 @@
-// Importando os módulos necessários
-const Telegraf = require('telegraf');
-const fs = require('fs');
 const { spawn } = require('child_process');
+const fs = require('fs');
 const ytdl = require('ytdl-core');
-const axios = require('axios');
-const config = require('./config');
 
-// Criando uma nova instância do bot com o token fornecido
-const bot = new Telegraf(config.botToken);
-
-// Iniciar o bot
-bot.start((ctx) => ctx.reply('Bem-vindo! Use o comando /help para ver as instruções.'));
-
-// Lidar com o comando /help
-bot.command('help', (ctx) => {
-  const helpMessage = `
-  Bem-vindo ao bot! Aqui estão as instruções disponíveis:
-  
-  /mp3 <URL> - Baixa o áudio de um vídeo do YouTube.
-  Exemplo: /mp3 https://www.youtube.com/watch?v=VIDEO_ID
-  
-  /mp4 <URL> - Baixa o vídeo de uma rede social (ex.: Youtube, Instagram, Twitter, etc.).
-  Exemplo: /mp4 https://www.instagram.com/reel/POST_ID
-  
-  /curto <URL> - Encurta um link.
-  Exemplo: /curto https://www.google.com
-  `;
-  ctx.replyWithMarkdown(helpMessage);
-});
-
-// Comando para baixar um vídeo em formato mp4
-bot.command('mp4', async (ctx) => {
+module.exports = async (ctx) => {
   // Obtendo a URL do vídeo a partir da mensagem enviada pelo usuário
   const videoUrl = ctx.message.text.split(' ')[1];
 
@@ -114,55 +86,4 @@ bot.command('mp4', async (ctx) => {
       ctx.reply('Ocorreu um erro ao baixar o vídeo.');
     }
   });
-});
-
-// Comando para baixar um áudio em formato mp3
-bot.command('mp3', async (ctx) => {
-  // Obtendo a URL do áudio a partir da mensagem enviada pelo usuário
-  const audioUrl = ctx.message.text.split(' ')[1];
-
-  try {
-    // Obtendo informações do áudio usando a biblioteca ytdl
-    const info = await ytdl.getInfo(audioUrl);
-    const videoTitle = info.videoDetails.title;
-    const fileName = `${videoTitle}.mp3`;
-
-    // Baixando o áudio
-    const stream = ytdl(audioUrl, { quality: 'highestaudio',filter: 'audioonly' });
-
-    // Enviando o áudio para o usuário
-    ctx.replyWithAudio({ source: stream, filename: fileName })
-      .then(() => {
-        console.log(`Arquivo ${fileName} enviado com sucesso.`);
-      })
-      .catch((error) => {
-        console.error(`Erro ao enviar o arquivo: ${error}`);
-        ctx.reply(`${error}, deu ruim família.`);
-      });
-  } catch (error) {
-    console.error(`Erro ao obter informações do link: ${error}`);
-    ctx.reply(`Ocorreu um erro ao obter informações do link. Envie novamente um link do YouTube.`);
-  }
-});
-
-// Lidar com o comando /curto
-bot.command('curto', async (ctx) => {
-  const longUrl = ctx.message.text.split(' ')[1];
-
-  try {
-    const shortenedUrl = await shortenUrl(longUrl);
-    ctx.replyWithHTML(`<a href="${shortenedUrl}">${shortenedUrl}</a>`, { disable_web_page_preview: true });
-  } catch (error) {
-    ctx.reply('Ocorreu um erro ao encurtar o link.');
-  }
-});
-
-// Função para encurtar o URL usando a API do is.gd
-async function shortenUrl(url) {
-  const apiUrl = `https://is.gd/create.php?format=simple&url=${encodeURIComponent(url)}`;
-  const response = await axios.get(apiUrl);
-  return response.data;
-}
-
-// Iniciando o bot
-bot.launch();
+};
