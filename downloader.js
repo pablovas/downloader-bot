@@ -112,7 +112,7 @@ bot.command('mp3', async (ctx) => {
     const fileName = `${videoTitle}.mp3`;
 
     // Baixando o áudio
-    const stream = ytdl(audioUrl, { filter: 'audioonly' });
+    const stream = ytdl(audioUrl, { quality: 'highestaudio',filter: 'audioonly' });
 
     // Enviando o áudio para o usuário
     ctx.replyWithAudio({ source: stream, filename: fileName })
