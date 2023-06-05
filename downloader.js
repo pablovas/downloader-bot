@@ -3,6 +3,7 @@ const Telegraf = require('telegraf');
 const fs = require('fs');
 const { spawn } = require('child_process');
 const ytdl = require('ytdl-core');
+const axios = require('axios');
 const config = require('./config');
 
 // Criando uma nova instância do bot com o token fornecido
@@ -10,7 +11,7 @@ const bot = new Telegraf(config.botToken);
 
 // Mensagem de bem-vindo
 bot.start((ctx) => {
-  ctx.reply('Bem-vindo! Para baixar um MP3 ou MP4, envie o comando /mp3 ou /mp4 seguido do link do arquivo.');
+  ctx.reply('Bem-vindo! Para baixar um MP3 ou MP4, envie o comando /mp3 ou /mp4 seguido do link do arquivo. Para encurtar um link, digite /curto seguido do link.');
 });
 
 // Comando para baixar um vídeo em formato mp4
@@ -128,6 +129,25 @@ bot.command('mp3', async (ctx) => {
     ctx.reply(`Ocorreu um erro ao obter informações do link. Envie novamente um link do YouTube.`);
   }
 });
+
+// Lidar com o comando /curto
+bot.command('curto', async (ctx) => {
+  const longUrl = ctx.message.text.split(' ')[1];
+
+  try {
+    const shortenedUrl = await shortenUrl(longUrl);
+    ctx.replyWithHTML(`<a href="${shortenedUrl}">${shortenedUrl}</a>`, { disable_web_page_preview: true });
+  } catch (error) {
+    ctx.reply('Ocorreu um erro ao encurtar o link.');
+  }
+});
+
+// Função para encurtar o URL usando a API do is.gd
+async function shortenUrl(url) {
+  const apiUrl = `https://is.gd/create.php?format=simple&url=${encodeURIComponent(url)}`;
+  const response = await axios.get(apiUrl);
+  return response.data;
+}
 
 // Iniciando o bot
 bot.launch();
