@@ -1,9 +1,9 @@
 const puppeteer = require('puppeteer');
 
 async function scrapeWebsite() {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
-    await page.goto('https://www.furg.br/en/estudantes/cardapio-ru/restaurante-universitario-lago');
+    await page.goto('https://www.furg.br/estudantes/cardapio-ru/restaurante-universitario-lago');
     await page.waitForSelector('.cardapio');
     const cardapioElement = await page.$('.cardapio');
     const screenshot = await cardapioElement.screenshot({ encoding: 'binary' });

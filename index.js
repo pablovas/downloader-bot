@@ -36,7 +36,7 @@ bot.command('mp4', mp4);
 bot.command('mp3', mp3);
 bot.command('curto', curto);
 bot.command('cc', ruCC);
-bot.command('lg', ruLG);
+bot.command('lago', ruLG);
 bot.command('micro', micro);
 
 // Iniciando o bot

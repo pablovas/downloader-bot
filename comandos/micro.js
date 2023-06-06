@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 
 async function scrapeWebsite() {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
     await page.goto('https://www.furg.br/horarios-do-onibus-interno');
     await page.waitForSelector('tbody');
