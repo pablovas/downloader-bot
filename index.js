@@ -7,6 +7,20 @@ const curto = require('./comandos/curto');
 const ruCC = require('./comandos/ruCC');
 const ruLG = require('./comandos/ruLG');
 const micro = require('./comandos/micro');
+const { exec } = require('child_process');
+
+// Run the installation command for yt-dlp
+const installCommand = 'npm install yt-dlp';
+const installOptions = { cwd: __dirname };
+
+exec(installCommand, installOptions, (error, stdout, stderr) => {
+  if (error) {
+    console.error(`Error installing yt-dlp: ${error.message}`);
+    return;
+  }
+  
+  console.log('yt-dlp installed successfully');
+});
 
 // Criando uma nova instância do bot com o token fornecido
 const bot = new Telegraf(config.botToken);
@@ -41,3 +55,4 @@ bot.command('micro', micro);
 
 // Iniciando o bot
 bot.launch();
+
