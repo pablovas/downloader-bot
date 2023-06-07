@@ -4,9 +4,8 @@ const config = require('./config');
 const mp4 = require('./comandos/mp4');
 const mp3 = require('./comandos/mp3');
 const curto = require('./comandos/curto');
-const ruCC = require('./comandos/ruCC');
-const ruLG = require('./comandos/ruLG');
 const micro = require('./comandos/micro');
+const ru = require('./comandos/ru');
 
 // Criando uma nova instância do bot com o token fornecido
 const bot = new Telegraf(config.botToken);
@@ -35,9 +34,8 @@ bot.command('help', (ctx) => {
 bot.command('mp4', mp4);
 bot.command('mp3', mp3);
 bot.command('curto', curto);
-bot.command('cc', ruCC);
-bot.command('lago', ruLG);
 bot.command('micro', micro);
+bot.command('ru', ru);
 
 // Iniciando o bot
 bot.launch();
