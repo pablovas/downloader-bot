@@ -21,11 +21,17 @@ bot.command('help', (ctx) => {
   /mp3 <URL> - Baixa o áudio de um vídeo do YouTube.
   Exemplo: /mp3 https://www.youtube.com/watch?v=VIDEO_ID
   
-  /mp4 <URL> - Baixa o vídeo de uma rede social (ex.: Youtube, Instagram, Twitter, etc.).
+  /mp4 <URL> - Baixa o vídeo de uma rede social (ex.: Youtube, Instagram, Twitter, e TikTok).
   Exemplo: /mp4 https://www.instagram.com/reel/POST_ID
   
   /curto <URL> - Encurta um link.
   Exemplo: /curto https://www.google.com
+
+  Se você estuda na FURG, existem comandos relevantes como:
+
+  /ru - Mostra os cardápios dos RUs quando disponíveis.
+
+  /micro - Mostra os horários do ônibus interno.
   `;
   ctx.replyWithMarkdown(helpMessage);
 });
