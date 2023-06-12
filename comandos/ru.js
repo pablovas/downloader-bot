@@ -6,6 +6,16 @@ async function scrapeWebsite(url) {
   const page = await context.newPage();
   await page.goto(url);
   await page.waitForSelector('.col-sm-6');
+
+  const hasCardapio = await page.$eval('.panel-heading.custom-panel__heading', (element) => {
+    return element.textContent.includes('Não há cardápio cadastrado para exibição no momento.');
+  }).catch(() => false);
+
+  if (hasCardapio) {
+    await browser.close();
+    return 'Não há cardápio';
+  }
+
   const cardapioElement = await page.$('.col-sm-6');
   const screenshot = await cardapioElement.screenshot({ fullPage: true });
 
@@ -16,15 +26,19 @@ async function scrapeWebsite(url) {
 
 module.exports = async (ctx) => {
   try {
-    // Primeiro script
     const url1 = 'https://www.furg.br/estudantes/cardapio-ru/restaurante-universitario-cc';
-    const screenshot1 = await scrapeWebsite(url1);
-    await ctx.replyWithPhoto({ source: screenshot1 });
+    const result1 = await scrapeWebsite(url1);
 
-    // Segundo script
     const url2 = 'https://www.furg.br/estudantes/cardapio-ru/restaurante-universitario-lago';
-    const screenshot2 = await scrapeWebsite(url2);
-    await ctx.replyWithPhoto({ source: screenshot2 });
+    const result2 = await scrapeWebsite(url2);
+
+    if (result1 && result2 === 'Não há cardápio cadastrado no site dos RUs neste momento, tente novamente mais tarde.') {
+      await ctx.reply('Não há cardápio');
+    } else {
+      await ctx.replyWithPhoto({ source: result1 });
+      await ctx.replyWithPhoto({ source: result2 });
+    }
+
   } catch (error) {
     console.error('Ocorreu um erro durante o web scraping:', error);
     ctx.reply('Desculpe, ocorreu um erro durante o web scraping.');
