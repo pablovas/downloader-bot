@@ -32,8 +32,8 @@ module.exports = async (ctx) => {
     const url2 = 'https://www.furg.br/estudantes/cardapio-ru/restaurante-universitario-lago';
     const result2 = await scrapeWebsite(url2);
 
-    if (result1 && result2 === 'Não há cardápio cadastrado no site dos RUs neste momento, tente novamente mais tarde.') {
-      await ctx.reply('Não há cardápio');
+    if (result1 && result2 === 'Não há cardápio') {
+      await ctx.reply('Não há cardápio cadastrado no site dos RUs neste momento, tente novamente mais tarde.');
     } else {
       await ctx.replyWithPhoto({ source: result1 });
       await ctx.replyWithPhoto({ source: result2 });
