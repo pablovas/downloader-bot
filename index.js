@@ -11,27 +11,32 @@ const ru = require('./comandos/ru');
 const bot = new Telegraf(config.botToken);
 
 // Iniciar o bot
-bot.start((ctx) => ctx.reply('Bem-vindo! Use o comando /help para ver as instruções.'));
+bot.start((ctx) => {
+  config.logInteraction(ctx);
+  ctx.reply('Bem-vindo! Use o comando /help para ver as instruções.');
+});
 
 // Lidar com o comando /help
 bot.command('help', (ctx) => {
   const helpMessage = `
-  Bem-vindo ao bot! Aqui estão as instruções disponíveis:
+  🤖 Bem-vindo ao bot! Aqui estão as instruções disponíveis:
+
+  /mp3 <URL> - Baixa o áudio de um vídeo do YouTube. 🎧
+  Exemplo: /mp3 https://www.youtube.com/watch?v=VIDEOID
   
-  /mp3 <URL> - Baixa o áudio de um vídeo do YouTube.
-  Exemplo: /mp3 https://www.youtube.com/watch?v=VIDEO_ID
+  /mp4 <URL> - Baixa o vídeo de uma rede social (ex.: Youtube, Instagram, Twitter, e TikTok). 🎬
+  Exemplo: /mp4 https://www.instagram.com/reel/POSTID
   
-  /mp4 <URL> - Baixa o vídeo de uma rede social (ex.: Youtube, Instagram, Twitter, e TikTok).
-  Exemplo: /mp4 https://www.instagram.com/reel/POST_ID
-  
-  /curto <URL> - Encurta um link.
+  /curto <URL> - Encurta um link. 🔗
   Exemplo: /curto https://www.google.com
-
-  Se você estuda na FURG, existem comandos relevantes como:
-
-  /ru - Mostra os cardápios dos RUs quando disponíveis.
-
-  /micro - Mostra os horários do ônibus interno.
+  
+  🎓 Se você estuda na FURG, existem comandos relevantes como:
+  
+  /ru - Mostra os cardápios dos RUs quando disponíveis. 🍲
+  
+  /micro - Mostra os horários do ônibus interno. 🕰️
+  
+  Aproveite as funcionalidades do nosso bot! 🤩✨
   `;
   ctx.replyWithMarkdown(helpMessage);
 });
