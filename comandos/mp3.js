@@ -1,6 +1,7 @@
 const ytdl = require('ytdl-core');
 
 module.exports = async (ctx) => {
+  const message = await ctx.reply('Por favor, aguarde enquanto baixamos a música.');
   // Obtendo a URL do áudio a partir da mensagem enviada pelo usuário
   const audioUrl = ctx.message.text.split(' ')[1];
 
@@ -16,6 +17,7 @@ module.exports = async (ctx) => {
     // Enviando o áudio para o usuário
     ctx.replyWithAudio({ source: stream, filename: fileName })
       .then(() => {
+        ctx.deleteMessage(message.message_id);
         console.log(`Arquivo ${fileName} enviado com sucesso.`);
       })
       .catch((error) => {

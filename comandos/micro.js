@@ -15,9 +15,11 @@ async function scrapeWebsite() {
 }
 
 module.exports = async (ctx) => {
+  const message = await ctx.reply('Por favor, aguarde breves momentos enquanto provemos a ti a distinta tabela...');
   try {
     const screenshot = await scrapeWebsite();
     await ctx.replyWithPhoto({ source: screenshot });
+    await ctx.deleteMessage(message.message_id);
   } catch (error) {
     console.error('Ocorreu um erro durante o web scraping:', error);
     ctx.reply('Desculpe, ocorreu um erro durante o web scraping.');

@@ -3,6 +3,7 @@ const fs = require('fs');
 const ytdl = require('ytdl-core');
 
 module.exports = async (ctx) => {
+  const message = await ctx.reply('Por favor, aguarde enquanto baixamos o vídeo.');
   // Obtendo a URL do vídeo a partir da mensagem enviada pelo usuário
   const videoUrl = ctx.message.text.split(' ')[1];
 
@@ -77,6 +78,7 @@ module.exports = async (ctx) => {
           // Excluindo o arquivo após o envio
           fs.unlinkSync(fileName);
           console.log(`Arquivo ${fileName} excluído com sucesso.`);
+          ctx.deleteMessage(message.message_id);
         })
         .catch((error) => {
           console.error(`Erro ao enviar o arquivo: ${error}`);

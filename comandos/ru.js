@@ -25,6 +25,7 @@ async function scrapeWebsite(url) {
 }
 
 module.exports = async (ctx) => {
+  const message = await ctx.reply('Por favor, aguarde breves momentos enquanto provemos a ti o distinto cardápio...');
   try {
     const url1 = 'https://www.furg.br/estudantes/cardapio-ru/restaurante-universitario-cc';
     const result1 = await scrapeWebsite(url1);
@@ -34,8 +35,10 @@ module.exports = async (ctx) => {
 
     if (result1 === 'Não há cardápio') {
       await ctx.replyWithPhoto({ source: result2 }, { caption: 'Não há cardápio cadastrado no RU CC neste momento, tente novamente mais tarde.' });
+      await ctx.deleteMessage(message.message_id);
     } else if (result2 === 'Não há cardápio') {
       await ctx.replyWithPhoto({ source: result1}, { caption: 'Não há cardápio cadastrado no RU lago neste momento, tente novamente mais tarde.' });
+      await ctx.deleteMessage(message.message_id);
     } else {
       await ctx.replyWithPhoto({ source: result1 });
       await ctx.replyWithPhoto({ source: result2 });
