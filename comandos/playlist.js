@@ -1,58 +1,84 @@
 const ytpl = require('ytpl');
 const ytdl = require('ytdl-core');
 const fs = require('fs');
+const sanitize = require('sanitize-filename');
+
+// Função para limpar o nome do arquivo removendo caracteres inválidos
+const sanitizeFilename = (filename) => {
+  let sanitized = sanitize(filename);
+  if (!sanitized) {
+    sanitized = filename.replace(/[\\/:"*?<>|]+/g, '');
+  }
+  return sanitized;
+};
 
 module.exports = async (ctx) => {
-  const message = await ctx.reply('Por favor, aguarde enquanto baixamos as músicas da playlist.');
-  // Obtendo a URL da playlist a partir da mensagem enviada pelo usuário
+  const message = await ctx.reply('Por favor, aguarde enquanto baixamos a playlist.');
+
   const playlistUrl = ctx.message.text.split(' ')[1];
 
   try {
-    // Obtendo informações da playlist usando a biblioteca ytpl
-    const playlist = await ytpl(playlistUrl, { limit: Infinity });
+    const playlist = await ytpl(playlistUrl);
+    const videos = playlist.items;
 
-    ctx.reply(`Playlist: ${playlist.title}`);
+    // Criando uma pasta temporária para salvar os arquivos de áudio
+    fs.mkdirSync('./temp', { recursive: true });
 
-    // Criando uma pasta temporária para os arquivos MP3
-    const tempFolder = './temp';
-    if (!fs.existsSync(tempFolder)) {
-      fs.mkdirSync(tempFolder);
+    let fileCount = 0;
+    const totalFiles = videos.length;
+
+    for (const video of videos) {
+      try {
+        const info = await ytdl.getInfo(video.url);
+        const videoTitle = info.videoDetails.title;
+        const fileName = sanitizeFilename(videoTitle) + '.mp3';
+
+        const stream = ytdl(video.url, { quality: 'highestaudio', filter: 'audioonly' });
+
+        const filePath = `./temp/${fileName}`;
+
+        const writeStream = fs.createWriteStream(filePath);
+        stream.pipe(writeStream);
+
+        await new Promise((resolve, reject) => {
+          writeStream.on('finish', resolve);
+          writeStream.on('error', reject);
+        });
+
+        ctx.replyWithDocument({ source: filePath, filename: fileName })
+          .then(() => {
+            fs.rmSync(filePath); // Remover o arquivo MP3 após enviar
+
+            console.log(`Arquivo ${fileName} enviado com sucesso.`);
+
+            fileCount++;
+            if (fileCount === totalFiles) {
+              // Atraso de 10 segundos antes de excluir a pasta 'temp'
+              setTimeout(() => {
+                fs.rmSync('./temp', { recursive: true });
+              }, 10000);
+            }
+          })
+          .catch((error) => {
+            console.error(`Erro ao enviar o arquivo: ${fileName}`);
+            console.error(error);
+          });
+      } catch (error) {
+        if (error.statusCode === 410) {
+          console.log(`Vídeo indisponível: ${video.title}, pulando para o próximo.`);
+        } else {
+          console.error(`Erro ao baixar o vídeo: ${video.title}, pulando para o próximo.`);
+          console.error(error);
+        }
+      }
     }
-
-    // Iterando sobre os vídeos da playlist
-    for (let video of playlist.items) {
-      const videoTitle = video.title;
-      const fileName = `${videoTitle}.mp3`;
-
-      // Baixando o áudio do vídeo
-      const stream = ytdl(video.url, { quality: 'highestaudio', filter: 'audioonly' });
-
-      // Salvando o áudio em um arquivo temporário
-      const filePath = `${tempFolder}/${fileName}`;
-      const writeStream = fs.createWriteStream(filePath);
-      stream.pipe(writeStream);
-
-      // Aguardando o término do download e envio do áudio
-      await new Promise((resolve) => {
-        writeStream.on('finish', resolve);
-      });
-
-      // Enviando o áudio para o usuário
-      await ctx.replyWithAudio({ source: filePath, filename: fileName });
-      console.log(`Arquivo ${fileName} enviado com sucesso.`);
-
-      // Apagando o arquivo MP3 do computador local
-      fs.unlinkSync(filePath);
-      console.log(`Arquivo ${fileName} apagado do computador.`);
-    }
-
-    // Removendo a pasta temporária
-    fs.rmdirSync(tempFolder);
 
     ctx.deleteMessage(message.message_id);
-    ctx.reply('Playlist enviada com sucesso!');
+    setTimeout(() => {
+        ctx.reply('Playlist enviada com sucesso!');
+    }, 5000);
   } catch (error) {
     console.error(`Erro ao obter informações da playlist: ${error}`);
-    ctx.reply('Ocorreu um erro ao obter informações da playlist. Envie novamente um link válido.');
+    ctx.reply('Ocorreu um erro ao obter informações da playlist. Verifique o link e tente novamente.');
   }
 };
