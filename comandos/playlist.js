@@ -60,12 +60,19 @@ module.exports = async (ctx) => {
             }
           })
           .catch((error) => {
-            console.error(`Erro ao enviar o arquivo: ${fileName}`);
-            console.error(error);
+            if (error.response && error.response.error_code === 413) {
+              // Arquivo muito grande, enviar mensagem de erro
+              console.error(`Arquivo muito grande: ${fileName}`);
+              ctx.reply(`A música "${videoTitle}" não foi enviada devido ao seu tamanho ser muito grande.`);
+            } else {
+              console.error(`Erro ao enviar o arquivo: ${fileName}`);
+              console.error(error);
+            }
           });
       } catch (error) {
         if (error.statusCode === 410) {
           console.log(`Vídeo indisponível: ${video.title}, pulando para o próximo.`);
+          ctx.reply(`O vídeo "${video.title}" está indisponível, pulando para o próximo.`);
         } else {
           console.error(`Erro ao baixar o vídeo: ${video.title}, pulando para o próximo.`);
           console.error(error);
