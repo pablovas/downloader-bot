@@ -56,8 +56,8 @@ module.exports = async (ctx) => {
           const videoTitle = info.videoDetails.title;
           const fileName = `${videoTitle}.mp4`;
   
-          // Baixando o vídeo em um formato de menor tamanho (qualidade 134)
-          const video = ytdl(videoUrl, { quality: '134' });
+          // Baixando o vídeo em um formato de menor tamanho (qualidade 18)
+          const video = ytdl(videoUrl, { quality: '18' });
   
           // Enviando o vídeo para o usuário
           ctx.replyWithVideo({ source: video }, { caption: caption, parse_mode: 'Markdown' })
