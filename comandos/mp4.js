@@ -7,7 +7,9 @@ module.exports = async (ctx) => {
   // Obtendo a URL do vídeo a partir da mensagem enviada pelo usuário
   let videoUrl = ctx.message.text.split(' ')[1];
   const questionMarkIndex = videoUrl.indexOf('?');
-  if (questionMarkIndex !== -1) {
+  if (videoUrl.includes('youtube')){
+    videoUrl;
+  } else if (questionMarkIndex !== -1) {
     videoUrl = videoUrl.substring(0, questionMarkIndex);
   }
 
