@@ -5,7 +5,11 @@ const ytdl = require('ytdl-core');
 module.exports = async (ctx) => {
   const message = await ctx.reply('Por favor, aguarde enquanto baixamos o vídeo.');
   // Obtendo a URL do vídeo a partir da mensagem enviada pelo usuário
-  const videoUrl = ctx.message.text.split(' ')[1];
+  let videoUrl = ctx.message.text.split(' ')[1];
+  const questionMarkIndex = videoUrl.indexOf('?');
+  if (questionMarkIndex !== -1) {
+    videoUrl = videoUrl.substring(0, questionMarkIndex);
+  }
 
   // Definindo o nome do arquivo de saída como 'video.mp4'
   const fileName = 'video.mp4';
