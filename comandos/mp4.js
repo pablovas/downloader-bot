@@ -6,7 +6,12 @@ module.exports = async (ctx) => {
   const message = await ctx.reply('Por favor, aguarde enquanto baixamos o vídeo.');
   // Obtendo a URL do vídeo a partir da mensagem enviada pelo usuário
   let videoUrl = ctx.message.text.split(' ')[1];
-  const questionMarkIndex = videoUrl.indexOf('?');
+  if (!videoUrl) {
+    // Se videoUrl for undefined ou vazio, exiba uma mensagem de erro e interrompa a execução
+    console.error('URL do vídeo não fornecida.');
+    return;
+  }
+  const questionMarkIndex = videoUrl.indexOf('?');  
   if (videoUrl.includes('youtube')){
     videoUrl;
   } else if (questionMarkIndex !== -1) {
@@ -72,6 +77,7 @@ module.exports = async (ctx) => {
         } catch (error) {
           console.error(`Erro ao obter informações do link: ${error}`);
           ctx.reply(`Ocorreu um erro ao obter informações do link.`);
+          return;
         }
       }
 
