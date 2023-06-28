@@ -24,16 +24,12 @@ bot.command('help', (ctx) => {
   🤖 Bem-vindo ao bot! Aqui estão as instruções disponíveis:
 
   /mp3 <URL> - Baixa o áudio de um vídeo do YouTube. 🎧
-  Exemplo: /mp3 https://www.youtube.com/watch?v=VIDEOID
   
-  /mp4 <URL> - Baixa o vídeo de uma rede social (ex.: Youtube, Instagram, Twitter, e TikTok). 🎬
-  Exemplo: /mp4 https://www.instagram.com/reel/POSTID
+  /mp4 <URL> - Baixa o vídeo de uma rede social (ex.: Youtube, Twitter, e TikTok). 🎬
   
   /curto <URL> - Encurta um link. 🔗
-  Exemplo: /curto https://www.google.com
 
   /playlist <URL> - Baixa uma playlist de músicas direto do YouTube. 📺
-  Exemplo: /playlist https://www.youtube.com/playlist?list=PLAYLISTID
   
   🎓 Se você estuda na FURG, existem comandos relevantes como:
   
