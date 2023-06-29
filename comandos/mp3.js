@@ -21,10 +21,12 @@ module.exports = async (ctx) => {
         console.log(`Arquivo ${fileName} enviado com sucesso.`);
       })
       .catch((error) => {
+        ctx.deleteMessage(message.message_id);
         console.error(`Erro ao enviar o arquivo: ${error}`);
         ctx.reply(`${error}, deu ruim família.`);
       });
   } catch (error) {
+    ctx.deleteMessage(message.message_id);
     console.error(`Erro ao obter informações do link: ${error}`);
     ctx.reply(`Ocorreu um erro ao obter informações do link. Envie novamente um link do YouTube.`);
   }
