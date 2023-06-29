@@ -38,20 +38,19 @@ module.exports = async (ctx) => {
     if (result1 && result2 === 'Não há cardápio') {
       // Se ambos os resultados indicarem ausência de cardápio
       await ctx.reply('Não há cardápio cadastrado nos RUs neste momento, tente novamente mais tarde.');
-      await ctx.deleteMessage(message.message_id); // Deleta a mensagem anterior
     } else if (result2 === 'Não há cardápio') {
       // Se apenas o resultado2 indicar ausência de cardápio
       await ctx.replyWithPhoto({ source: result1 }, { caption: 'Não há cardápio cadastrado no RU lago neste momento, tente novamente mais tarde.' });
-      await ctx.deleteMessage(message.message_id); // Deleta a mensagem anterior
     } else if (result1 === 'Não há cardápio') {
       // Se apenas o resultado1 indicar ausência de cardápio
       await ctx.replyWithPhoto({ source: result2 }, { caption: 'Não há cardápio cadastrado no RU CC neste momento, tente novamente mais tarde.' });
-      await ctx.deleteMessage(message.message_id); // Deleta a mensagem anterior
     } else {
       // Se ambos os resultados contiverem capturas de tela válidas
       await ctx.replyWithPhoto({ source: result1 });
       await ctx.replyWithPhoto({ source: result2 });
     }
+    await ctx.deleteMessage(message.message_id); // Deleta a mensagem anterior
+
   } catch (error) {
     console.error('Ocorreu um erro durante o web scraping:', error);
     ctx.reply('Desculpe, ocorreu um erro durante o web scraping.'); // Retorna uma mensagem de erro em caso de exceção
