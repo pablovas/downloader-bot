@@ -12,7 +12,9 @@ module.exports = async (ctx) => {
     return;
   }
   const questionMarkIndex = videoUrl.indexOf('?');  
-  if (videoUrl.includes('youtube')){
+  if (videoUrl.includes('music.youtube')){
+    videoUrl = videoUrl.replace('music.', '');
+  } else if (videoUrl.includes('youtube')){ 
     videoUrl;
   } else if (questionMarkIndex !== -1) {
     videoUrl = videoUrl.substring(0, questionMarkIndex);
