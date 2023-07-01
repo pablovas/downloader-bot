@@ -11,11 +11,18 @@ module.exports = async (ctx) => {
     console.error('URL do vídeo não fornecida.');
     return;
   }
-  const questionMarkIndex = videoUrl.indexOf('?');  
+  const questionMarkIndex = videoUrl.indexOf('?');
+  const commercialMarkIndex = videoUrl.indexOf('&');
   if (videoUrl.includes('music.youtube')){
     videoUrl = videoUrl.replace('music.', '');
-  } else if (videoUrl.includes('youtube')){ 
-    videoUrl;
+  } 
+  
+  if (videoUrl.includes('youtube')){
+    if (commercialMarkIndex !== -1){
+      videoUrl = videoUrl.substring(0, commercialMarkIndex);
+    } else{
+      videoUrl;
+    }
   } else if (questionMarkIndex !== -1) {
     videoUrl = videoUrl.substring(0, questionMarkIndex);
   }
