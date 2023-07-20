@@ -8,7 +8,7 @@
     "screenshot-desktop": "^1.14.0",
     "sharp": "^0.32.1",
     "telegraf": "^3.40.0",
-    "ytdl-core": "^4.11.4",
+    "ytdl-core": "^4.11.5",
     "ytpl": "^2.3.0"
   }
 }
