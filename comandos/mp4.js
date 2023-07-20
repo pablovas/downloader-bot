@@ -7,16 +7,19 @@ module.exports = async (ctx) => {
   // Obtendo a URL do vídeo a partir da mensagem enviada pelo usuário
   let videoUrl = ctx.message.text.split(' ')[1];
   if (!videoUrl) {
-    // Se videoUrl for undefined ou vazio, exiba uma mensagem de erro e interrompa a execução
     console.error('URL do vídeo não fornecida.');
     return;
   }
+
+  // Remove trackers do link
   const questionMarkIndex = videoUrl.indexOf('?');
   const commercialMarkIndex = videoUrl.indexOf('&');
+
+  // Make possible download YT Music clips
   if (videoUrl.includes('music.youtube')){
     videoUrl = videoUrl.replace('music.', '');
-  } 
-  
+  }
+
   if (videoUrl.includes('youtube')){
     if (commercialMarkIndex !== -1){
       videoUrl = videoUrl.substring(0, commercialMarkIndex);
@@ -106,6 +109,7 @@ module.exports = async (ctx) => {
         });
     } else {
       // Caso ocorra um erro ao baixar o vídeo
+      await ctx.deleteMessage(message.message_id);
       ctx.reply('Ocorreu um erro ao baixar o vídeo.');
     }
   });
