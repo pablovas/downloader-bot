@@ -8,6 +8,7 @@ const micro = require('./comandos/micro');
 const ru = require('./comandos/ru');
 const error = require('./comandos/error');
 const playlist = require('./comandos/playlist');
+const pdf = require('./comandos/pdf');
 
 // Criando uma nova instância do bot com o token fornecido
 const bot = new Telegraf(config.botToken);
@@ -52,6 +53,7 @@ bot.command('micro', micro);
 bot.command('ru', ru);
 bot.command('erro', error);
 bot.command('playlist', playlist);
+bot.command('pdf', pdf);
 
 // Iniciando o bot
 bot.launch();
