@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 
 module.exports = async (ctx) => {
+    const message = await ctx.reply('Por favor, aguarde enquanto convertemos a pagina.');
     const url = ctx.message.text.split(' ')[1];
 
     if (!url) {
@@ -27,6 +28,7 @@ module.exports = async (ctx) => {
     
         // Envia o PDF para o Telegram
         ctx.replyWithDocument({ source: pdfBuffer, filename: `${title}.pdf` });
+        ctx.deleteMessage(message.message_id);
    
     } catch (error) {
       console.error('Erro ao converter a página em PDF:', error);
