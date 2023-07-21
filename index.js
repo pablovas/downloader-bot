@@ -33,6 +33,8 @@ bot.command('help', (ctx) => {
   /curto <URL> - Encurta um link. 🔗
 
   /playlist <URL> - Baixa uma playlist de músicas direto do YouTube. 📺
+
+  /pdf <URL> - Converte a página web em pdf. 📄
   
   🎓 Se você estuda na FURG, existem comandos relevantes como:
   
