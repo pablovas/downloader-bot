@@ -48,8 +48,8 @@ module.exports = async (ctx) => {
       await ctx.replyWithPhoto({ source: result2 }, { caption: 'Não há cardápio cadastrado no RU CC neste momento, tente novamente mais tarde.' });
     } else {
       // Se ambos os resultados contiverem capturas de tela válidas
-      await ctx.replyWithPhoto({ source: result1 }, { caption: `Para mais informações acesse ${caption1}` });
-      await ctx.replyWithPhoto({ source: result2 }, { caption: `Para mais informações acesse ${caption2}` });
+      await ctx.replyWithPhoto({ source: result1 }, { caption: `Para mais informações acesse: ${caption1}`, parse_mode: 'Markdown' });
+      await ctx.replyWithPhoto({ source: result2 }, { caption: `Para mais informações acesse: ${caption2}`, parse_mode: 'Markdown' });
     }
     await ctx.deleteMessage(message.message_id); // Deleta a mensagem anterior
 
