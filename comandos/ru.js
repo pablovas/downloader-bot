@@ -31,9 +31,11 @@ module.exports = async (ctx) => {
   try {
     const url1 = 'https://www.furg.br/estudantes/cardapio-ru/restaurante-universitario-cc';
     const result1 = await scrapeWebsite(url1); // Executa o scraping para a primeira URL
+    const caption1 = `[🔗RU CC](${url1})`;
 
     const url2 = 'https://www.furg.br/estudantes/cardapio-ru/restaurante-universitario-lago';
     const result2 = await scrapeWebsite(url2); // Executa o scraping para a segunda URL
+    const caption2 = `[🔗RU LAGO](${url2})`;
 
     if (result1 && result2 === 'Não há cardápio cadastrado para exibição no momento.') {
       // Se ambos os resultados indicarem ausência de cardápio
@@ -46,8 +48,8 @@ module.exports = async (ctx) => {
       await ctx.replyWithPhoto({ source: result2 }, { caption: 'Não há cardápio cadastrado no RU CC neste momento, tente novamente mais tarde.' });
     } else {
       // Se ambos os resultados contiverem capturas de tela válidas
-      await ctx.replyWithPhoto({ source: result1 });
-      await ctx.replyWithPhoto({ source: result2 });
+      await ctx.replyWithPhoto({ source: result1 }, { caption: `Para mais informações acesse ${caption1}` });
+      await ctx.replyWithPhoto({ source: result2 }, { caption: `Para mais informações acesse ${caption2}` });
     }
     await ctx.deleteMessage(message.message_id); // Deleta a mensagem anterior
 
