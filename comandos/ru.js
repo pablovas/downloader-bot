@@ -37,7 +37,7 @@ module.exports = async (ctx) => {
     const result2 = await scrapeWebsite(url2); // Executa o scraping para a segunda URL
     const caption2 = `[🔗RU LAGO](${url2})`;
 
-    if (result1 && result2 === 'Não há cardápio cadastrado para exibição no momento.') {
+    if (result1 && result2 === 'Não há cardápio') {
       // Se ambos os resultados indicarem ausência de cardápio
       await ctx.reply('Não há cardápio cadastrado nos RUs neste momento, tente novamente mais tarde.');
     } else if (result2 === 'Não há cardápio') {
