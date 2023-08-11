@@ -60,7 +60,8 @@ module.exports = async (ctx) => {
 
       if (fileSizeInMB > 49) {
         // Se o arquivo for muito grande, envia uma mensagem informando ao usuário
-        ctx.reply('O arquivo original é muito grande e não pode ser enviado.')
+        ctx.reply('Desculpe. O arquivo original é muito grande e não pode ser enviado.')
+        ctx.deleteMessage(message.message_id)
           .then(() => {
             // Exclui o arquivo baixado
             fs.unlinkSync(fileName);
@@ -84,11 +85,13 @@ module.exports = async (ctx) => {
             .catch((error) => {
               console.error(`Erro ao enviar o arquivo: ${error}`);
               ctx.reply(`${error}, deu ruim família.`);
+              ctx.deleteMessage(message.message_id);
             });
           return;
         } catch (error) {
           console.error(`Erro ao obter informações do link: ${error}`);
           ctx.reply(`Ocorreu um erro ao obter informações do link.`);
+          ctx.deleteMessage(message.message_id);
           return;
         }
       }
