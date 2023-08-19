@@ -57,7 +57,7 @@ module.exports = async (ctx) => {
       caption += "\nO ônibus passará na Oceantec neste horário.";
     } else if (horariosEQA.includes(horarioProximo)) {
       caption += "\nEste ônibus sairá do EQA.";
-    } else if (!horariosOceantec.includes(horarioProximo) && !horariosEQA.includes(horarioProximon)) {
+    } else if (!horariosOceantec.includes(horarioProximo) && !horariosEQA.includes(horarioProximo)) {
       caption += "\nO ônibus sairá do Predio 4 como de praste.";
     }
 
