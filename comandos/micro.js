@@ -16,6 +16,13 @@ async function scrapeWebsite() {
 
 module.exports = async (ctx) => {
   const message = await ctx.reply('Por favor, aguarde breves momentos enquanto provemos a ti a distinta tabela...');
+  
+    // Função para verificar se é fim de semana
+    async function isWeekend() {
+      const today = new Date();
+      const dayOfWeek = today.getDay(); // 0 (Sunday) to 6 (Saturday)
+      return dayOfWeek === 0 || dayOfWeek === 6; // Sunday or Saturday
+    }
 
   let horarios = ['06:50', '07:10', '07:30', '07:50', '08:15', '08:50', '09:30', '10:25', '11:05', '11:30', '12:00', '12:15', '12:45', '13:15', '13:40', '14:00', '14:50', '15:30', '16:00', '16:50', '17:30', '18:05', '18:30', '18:55', '19:20', '19:45', '20:25', '20:40', '21:35', '22:20', '22:45', '23:15'];
 
@@ -53,7 +60,9 @@ module.exports = async (ctx) => {
     // Crie a legenda baseada nas informações
     let caption = `🚌 Próximo horário: ${horarioProximo}`;
 
-    if (horariosOceantec.includes(horarioProximo)) {
+    if (isWeekend) {
+      caption = "Hoje não tem ônibus";
+    } else if (horariosOceantec.includes(horarioProximo)) {
       caption += "\nO ônibus passará na Oceantec neste horário.";
     } else if (horariosEQA.includes(horarioProximo)) {
       caption += "\nEste ônibus sairá do EQA.";
