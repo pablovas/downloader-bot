@@ -61,7 +61,7 @@ module.exports = async (ctx) => {
     let caption = `🚌 Próximo horário: ${horarioProximo}`;
 
     if (isWeekend) {
-      caption = "Hoje não tem ônibus";
+      caption = "😓 Hoje não terá ônibus interno, mas estes são os horários.";
     } else if (horariosOceantec.includes(horarioProximo)) {
       caption += "\nO ônibus passará na Oceantec neste horário.";
     } else if (horariosEQA.includes(horarioProximo)) {
