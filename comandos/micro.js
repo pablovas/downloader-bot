@@ -56,11 +56,34 @@ module.exports = async (ctx) => {
   // Horários específicos em que o ônibus sairá do EQA
   let horariosEQA = ['21:35', '22:20', '22:45', '23:15'];
 
+  // Função para calcular a diferença de tempo em minutos
+  function calculateTimeDifference(startTime, endTime) {
+    const start = new Date(`2000-01-01 ${startTime}`);
+    const end = new Date(`2000-01-01 ${endTime}`);
+    const diff = end - start;
+    return Math.floor(diff / 1000 / 60); // Convertendo para minutos
+  }
+
   try {
     const screenshot = await scrapeWebsite(); // Executa o web scraping para obter a captura de tela da tabela
-    
-    // Crie a legenda baseada nas informações
-    let caption = `🚌 Próximo horário: ${horarioProximo}`;
+
+    // Cálculo do tempo até o próximo ônibus
+    const tempoFalta = calculateTimeDifference(horarioAtualFormatado, horarioProximo);
+
+    let tempoFaltaTexto;
+    if (tempoFalta < 60) {
+      tempoFaltaTexto = tempoFalta === 1 ? '1 minuto' : `${tempoFalta} minutos`;
+    } else {
+      const horas = Math.floor(tempoFalta / 60);
+      const minutosRestantes = tempoFalta % 60;
+      tempoFaltaTexto = `${horas} horas`;
+      if (minutosRestantes > 0) {
+        tempoFaltaTexto += ` e ${minutosRestantes} minutos`;
+      }
+    }
+
+    let caption = `🚌 Próximo horário: ${horarioProximo}\nTempo até o próximo ônibus: ${tempoFaltaTexto}`;
+
 
     if (await isWeekend()) {
       caption = "Hoje não tem ônibus";
