@@ -1,6 +1,8 @@
 const ytdl = require('ytdl-core');
+const config = require('../config');
 
 module.exports = async (ctx) => {
+  config.logInteraction(ctx, '/mp3');
   const message = await ctx.reply('Por favor, aguarde enquanto baixamos a música.');
   // Obtendo a URL do áudio a partir da mensagem enviada pelo usuário
   const audioUrl = ctx.message.text.split(' ')[1];

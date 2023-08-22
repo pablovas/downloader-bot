@@ -2,6 +2,7 @@ const ytpl = require('ytpl');
 const ytdl = require('ytdl-core');
 const fs = require('fs');
 const sanitize = require('sanitize-filename');
+const config = require('../config');
 
 // Função para limpar o nome do arquivo removendo caracteres inválidos
 const sanitizeFilename = (filename) => {
@@ -13,6 +14,7 @@ const sanitizeFilename = (filename) => {
 };
 
 module.exports = async (ctx) => {
+  config.logInteraction(ctx, '/playlist');
   const message = await ctx.reply('Por favor, aguarde enquanto baixamos a playlist.');
 
   const playlistUrl = ctx.message.text.split(' ')[1];
