@@ -39,8 +39,15 @@ module.exports = async (ctx) => {
   // Encontrar o próximo horário disponível
   let horarioProximo = null;
 
+  const currentTime = new Date();
+
   for (let horario of horarios) {
-    if (horario > horarioAtualFormatado) {
+    const [horas, minutos] = horario.split(':');
+    const busTime = new Date(currentTime);
+    busTime.setHours(Number(horas));
+    busTime.setMinutes(Number(minutos));
+  
+    if (busTime > currentTime) {
       horarioProximo = horario;
       break;
     }
