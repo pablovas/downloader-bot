@@ -18,6 +18,16 @@ bot.start((ctx) => {
   ctx.reply('Bem-vindo! Use o comando /help para ver as instruções.');
 });
 
+// Middleware para lidar com mensagens que não correspondem a comandos
+bot.on('text', (ctx) => {
+  const userMessage = ctx.message.text;
+  const allowedCommands = ['/start', '/help', '/mp4', '/mp3', '/curto', '/micro', '/ru', '/erro', '/playlist'];
+  
+  if (!allowedCommands.some(command => userMessage.startsWith(command))) {
+    ctx.reply('Desculpe, não entendi. Use /help para ver as instruções.');
+  }
+});
+
 // Lidar com o comando /help
 bot.command('help', (ctx) => {
   const helpMessage = `
