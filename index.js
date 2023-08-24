@@ -20,6 +20,7 @@ bot.start((ctx) => {
 
 // Middleware para lidar com mensagens que não correspondem a comandos
 bot.on('text', (ctx) => {
+  config.logInteraction(ctx, 'text');
   const userMessage = ctx.message.text;
   const allowedCommands = ['/start', '/help', '/mp4', '/mp3', '/curto', '/micro', '/ru', '/erro', '/playlist'];
   
