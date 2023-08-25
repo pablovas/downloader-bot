@@ -78,7 +78,10 @@ module.exports = async (ctx) => {
     const tempoFalta = calculateTimeDifference(horarioAtualFormatado, horarioProximo);
 
     let tempoFaltaTexto;
-    if (tempoFalta < 60) {
+    if (tempoFalta < 0) {
+      horarioProximo = horarios[0];
+      tempoFalta = calculateTimeDifference(horarioAtualFormatado, horarioProximo);
+    } else if (tempoFalta < 60) {
       tempoFaltaTexto = tempoFalta === 1 ? '1 minuto' : `${tempoFalta} minutos`;
     } else {
       const horas = Math.floor(tempoFalta / 60);
