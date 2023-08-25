@@ -12,6 +12,20 @@ const playlist = require('./comandos/playlist');
 // Criando uma nova instância do bot com o token fornecido
 const bot = new Telegraf(config.botToken);
 
+// Lidar com comandos não reconhecidos
+bot.use((ctx, next) => {
+  const validCommands = ['/start', '/help', '/mp4', '/mp3', '/curto', '/micro', '/ru', '/erro', '/playlist'];
+
+  const command = ctx.message.text.split(' ')[0];
+
+  if (!validCommands.includes(command)) {
+    config.logInteraction(ctx);
+    ctx.reply("Comando inválido. Use o comando /help para ver as instruções.");
+  } else {
+    next();
+  }
+});
+
 // Iniciar o bot
 bot.start((ctx) => {
   config.logInteraction(ctx);
@@ -20,6 +34,7 @@ bot.start((ctx) => {
 
 // Lidar com o comando /help
 bot.command('help', (ctx) => {
+  config.logInteraction(ctx, '/help');
   const helpMessage = `
   🤖 Bem-vindo ao bot! Aqui estão as instruções disponíveis:
 
