@@ -54,9 +54,9 @@ bot.command('help', (ctx) => {
 
   /mp3 <URL> - Baixa o áudio de um vídeo do YouTube. 🎧
   
-  /mp4 <URL> - Baixa o vídeo de uma rede social (ex.: Youtube, Instagram, Twitter, e TikTok). 🎬
+  /mp4 <URL> - Baixa o vídeo de uma rede social (ex.: Youtube, Instagram, Twitter, TikTok e outros). 🎬
 
-  ⚠️ DEVIDO A RECENTES ALTERAÇÕES NA API DO TWITTER E INSTAGRAM, O DOWNLOAD DE VIDEOS PODE APRESENTAR INSTABILIDADES) ⚠️
+  ⚠️ DEVIDO A RECENTES ALTERAÇÕES NA API DO TWITTER, O DOWNLOAD DE VIDEOS PODE APRESENTAR INSTABILIDADES) ⚠️
   
   /curto <URL> - Encurta um link. 🔗
 
