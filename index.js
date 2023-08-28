@@ -12,17 +12,31 @@ const playlist = require('./comandos/playlist');
 // Criando uma nova instância do bot com o token fornecido
 const bot = new Telegraf(config.botToken);
 
-// Lidar com comandos não reconhecidos
-bot.use((ctx, next) => {
+// Middleware para lidar com comandos não reconhecidos
+bot.use(async (ctx, next) => {
   const validCommands = ['/start', '/help', '/mp4', '/mp3', '/curto', '/micro', '/ru', '/erro', '/playlist'];
 
-  const command = ctx.message.text.split(' ')[0];
+  if (ctx.message && ctx.message.text) {
+    const command = ctx.message.text.split(' ')[0];
 
-  if (!validCommands.includes(command)) {
-    config.logInteraction(ctx);
-    ctx.reply("Comando inválido. Use o comando /help para ver as instruções.");
+    if (!validCommands.includes(command)) {
+      try {
+        const chat = await ctx.getChat();
+        if (chat && chat.type === 'private' && chat.blocked) {
+          console.log("O bot foi bloqueado pelo usuário.");
+        } else {
+          await ctx.reply("Comando inválido. Use o comando /help para ver as instruções.");
+        }
+      } catch (error) {
+        // Lidar com erro ao verificar o status do chat
+        console.error("Erro ao verificar o status do chat:", error.message);
+      }
+    } else {
+      next();
+    }
   } else {
-    next();
+    // Lidar com mensagens sem texto, se necessário
+    ctx.reply("Por favor, envie um comando válido.");
   }
 });
 
