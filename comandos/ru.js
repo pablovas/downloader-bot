@@ -5,7 +5,7 @@ async function scrapeWebsite(url) {
   const browser = await chromium.launch(); // Inicializa o navegador Chromium
   const context = await browser.newContext(); // Cria um novo contexto de navegação
   const page = await context.newPage(); // Cria uma nova página dentro do contexto
-  await page.goto(url); // Navega para a URL fornecida
+  await page.goto(url , {waitUntil: 'domcontentloaded'}); // Navega para a URL fornecida
   await page.waitForSelector('.col-sm-6'); // Aguarda a existência do seletor '.col-sm-6' na página
 
   const hasCardapio = await page.$eval('.panel-heading.custom-panel__heading', (element) => {
@@ -31,27 +31,27 @@ module.exports = async (ctx) => {
   const message = await ctx.reply('Por favor, aguarde breves momentos enquanto provemos a ti o distinto cardápio...');
 
   try {
-    const url1 = 'https://www.furg.br/estudantes/cardapio-ru/restaurante-universitario-cc';
-    const result1 = await scrapeWebsite(url1); // Executa o scraping para a primeira URL
-    const caption1 = `[🔗RU CC](${url1})`;
+    const urlCC = 'https://www.furg.br/estudantes/cardapio-ru/restaurante-universitario-cc';
+    const resultCC = await scrapeWebsite(urlCC); // Executa o scraping para a primeira URL
+    const captionCC = `[🔗RU CC](${urlCC})`;
 
-    const url2 = 'https://www.furg.br/estudantes/cardapio-ru/restaurante-universitario-lago';
-    const result2 = await scrapeWebsite(url2); // Executa o scraping para a segunda URL
-    const caption2 = `[🔗RU LAGO](${url2})`;
+    const urlLago = 'https://www.furg.br/estudantes/cardapio-ru/restaurante-universitario-lago';
+    const resultLago = await scrapeWebsite(urlLago); // Executa o scraping para a segunda URL
+    const captionLago = `[🔗RU LAGO](${urlLago})`;
 
-    if (result1 === 'Não há cardápio' && result2 === 'Não há cardápio') {
+    if (resultCC === 'Não há cardápio' && resultLago === 'Não há cardápio') {
       // Se ambos os resultados indicarem ausência de cardápio
       await ctx.reply('Não há cardápio cadastrado nos RUs neste momento, tente novamente mais tarde ');    
-    } else if (result2 === 'Não há cardápio') {
+    } else if (resultLago === 'Não há cardápio') {
       // Se apenas o resultado2 indicar ausência de cardápio
-      await ctx.replyWithPhoto({ source: result1 }, { caption: 'Não há cardápio cadastrado no RU lago neste momento, tente novamente mais tarde.' });
-    } else if (result1 === 'Não há cardápio') {
+      await ctx.replyWithPhoto({ source: resultCC }, { caption: `Não há cardápio cadastrado no RU Lago neste momento, tente novamente mais tarde.`});
+    } else if (resultCC === 'Não há cardápio') {
       // Se apenas o resultado1 indicar ausência de cardápio
-      await ctx.replyWithPhoto({ source: result2 }, { caption: 'Não há cardápio cadastrado no RU CC neste momento, tente novamente mais tarde.' });
+      await ctx.replyWithPhoto({ source: resultLago }, { caption: `Não há cardápio cadastrado no RU CC neste momento, tente novamente mais tarde.`});
     } else {
       // Se ambos os resultados contiverem capturas de tela válidas
-      await ctx.replyWithPhoto({ source: result1 }, { caption: `Para mais informações acesse: ${caption1}`, parse_mode: 'Markdown' });
-      await ctx.replyWithPhoto({ source: result2 }, { caption: `Para mais informações acesse: ${caption2}`, parse_mode: 'Markdown' });
+      await ctx.replyWithPhoto({ source: resultCC }, { caption: `Para mais informações acesse: ${captionCC}`, parse_mode: 'Markdown' });
+      await ctx.replyWithPhoto({ source: resultLago }, { caption: `Para mais informações acesse: ${captionLago}`, parse_mode: 'Markdown' });
     }
     await ctx.deleteMessage(message.message_id); // Deleta a mensagem anterior
 
