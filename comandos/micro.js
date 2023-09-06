@@ -107,10 +107,8 @@ module.exports = async (ctx) => {
 
     await ctx.replyWithPhoto({source: screenshot}, {caption: caption}); // Envia a captura de tela como uma imagem de resposta
     await ctx.deleteMessage(message.message_id); // Deleta a mensagem anterior
+
   } catch (error) {
-    if (error.includes('Timeout')) {
-      ctx.reply("O site está fora do ar. Tente novamente mais tarde.");
-    }
     console.error('Ocorreu um erro durante o web scraping:', error);
     await ctx.deleteMessage(message.message_id);
     ctx.reply('Desculpe, ocorreu um erro durante o web scraping.'); // Retorna uma mensagem de erro em caso de exceção
