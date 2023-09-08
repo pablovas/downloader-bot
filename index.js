@@ -52,11 +52,11 @@ bot.command('help', (ctx) => {
   const helpMessage = `
   🤖 Bem-vindo ao bot! Aqui estão as instruções disponíveis:
 
-  /mp3 <URL> - Baixa o áudio de um vídeo do YouTube. 🎧
+  /mp3 <URL> - Baixa o áudio de uma rede social (ex.: Youtube, Instagram, Twitter, TikTok e outros). 🎧
   
   /mp4 <URL> - Baixa o vídeo de uma rede social (ex.: Youtube, Instagram, Twitter, TikTok e outros). 🎬
 
-  ⚠️ DEVIDO A RECENTES ALTERAÇÕES NA API DO TWITTER, O DOWNLOAD DE VIDEOS PODE APRESENTAR INSTABILIDADES) ⚠️
+  ⚠️ DEVIDO A RECENTES ALTERAÇÕES NA API DO TWITTER, O DOWNLOAD PODE APRESENTAR INSTABILIDADES ⚠️
   
   /curto <URL> - Encurta um link. 🔗
 
