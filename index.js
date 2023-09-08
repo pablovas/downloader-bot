@@ -59,8 +59,6 @@ bot.command('help', (ctx) => {
   ⚠️ DEVIDO A RECENTES ALTERAÇÕES NA API DO TWITTER, O DOWNLOAD PODE APRESENTAR INSTABILIDADES ⚠️
   
   /curto <URL> - Encurta um link. 🔗
-
-  /playlist <URL> - Baixa uma playlist de músicas direto do YouTube. 📺
   
   🎓 Se você estuda na FURG, existem comandos relevantes como:
   
