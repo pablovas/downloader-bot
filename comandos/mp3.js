@@ -1,106 +1,95 @@
 const { spawn } = require('child_process');
 const fs = require('fs');
-const ytdl = require('ytdl-core');
+const axios = require('axios');
+const sanitize = require('sanitize-filename');
 const config = require('../config');
 
 module.exports = async (ctx) => {
   config.logInteraction(ctx, '/mp3');
   const message = await ctx.reply('Por favor, aguarde enquanto baixamos o áudio.');
 
-  let videoUrl = ctx.message.text.split(' ')[1];
-  if (!videoUrl) {
+  let audioUrl = ctx.message.text.split(' ')[1];
+  if (!audioUrl) {
     console.error('URL do vídeo não fornecida.');
     return;
   }
 
   // Remova os trackers do link
-  const questionMarkIndex = videoUrl.indexOf('?');
-  const commercialMarkIndex = videoUrl.indexOf('&');
+  const questionMarkIndex = audioUrl.indexOf('?');
+  const commercialMarkIndex = audioUrl.indexOf('&');
 
   // Torne possível o download de clipes do YT Music
-  if (videoUrl.includes('music.youtube')){
-    videoUrl = videoUrl.replace('music.', '');
+  if (audioUrl.includes('music.youtube')) {
+    audioUrl = audioUrl.replace('music.', '');
   }
 
-  if (videoUrl.includes('youtube')){
-    if (commercialMarkIndex !== -1){
-      videoUrl = videoUrl.substring(0, commercialMarkIndex);
-    } else{
-      videoUrl;
+  if (audioUrl.includes('youtube')) {
+    if (commercialMarkIndex !== -1) {
+      audioUrl = audioUrl.substring(0, commercialMarkIndex);
+    } else {
+      audioUrl;
     }
   } else if (questionMarkIndex !== -1) {
-    videoUrl = videoUrl.substring(0, questionMarkIndex);
+    audioUrl = audioUrl.substring(0, questionMarkIndex);
   }
 
-  // Defina o nome do arquivo de saída como 'audio.mp3'
-  const fileName = 'audio.mp3';
+  try {
+    const videoInfo = await axios.get(audioUrl);
+    const match = videoInfo.data.match(/<title>(.*?)<\/title>/);
+    let videoTitle = match ? match[1] : 'audio'; // Título padrão como 'audio'
 
-  // Executando o comando 'yt-dlp' para baixar o áudio no formato MP3
-  const ytDlp = spawn('yt-dlp', ['-x', '--audio-format', 'mp3', '-o', fileName, videoUrl]);
+    const sanitizedTitle = sanitize(videoTitle);
+    const fileName = `${sanitizedTitle}.mp3`;
 
-  ytDlp.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
-  });
+    const ytDlp = spawn('yt-dlp', ['-x', '--audio-format', 'mp3', '--output', fileName, audioUrl]);
 
-  ytDlp.stderr.on('data', (data) => {
-    console.error(`stderr: ${data}`);
-  });
+    ytDlp.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
 
-  ytDlp.on('close', async (code) => {
-    console.log(`yt-dlp process exited with code ${code}`);
-    if (code === 0) {
-      const stats = fs.statSync(fileName);
-      const fileSizeInBytes = stats.size;
-      const fileSizeInMB = fileSizeInBytes / (1024 * 1024);
+    ytDlp.stderr.on('data', (data) => {
+      console.error(`stderr: ${data}`);
+    });
 
-      if (fileSizeInMB > 49) {
-        ctx.reply('Desculpe. O arquivo original é muito grande e não pode ser enviado.');
-        ctx.deleteMessage(message.message_id)
-          .then(() => {
-            fs.unlinkSync(fileName);
-            console.log(`Arquivo ${fileName} excluído com sucesso.`);
-          });
+    ytDlp.on('close', async (code) => {
+      console.log(`yt-dlp process exited with code ${code}`);
+      if (code === 0) {
+        const stats = fs.statSync(fileName);
+        const fileSizeInBytes = stats.size;
+        const fileSizeInMB = fileSizeInBytes / (1024 * 1024);
 
-        try {
-          const info = await ytdl.getInfo(videoUrl);
-          const videoTitle = info.videoDetails.title;
-          const fileName = `${videoTitle}.mp4`;
-
-          const video = ytdl(videoUrl, { quality: '18' });
-
-          ctx.replyWithVideo({ source: video }, { caption: `[🔗Fonte](${videoUrl})`, parse_mode: 'Markdown' })
+        if (fileSizeInMB > 49) {
+          ctx.reply('Desculpe. O arquivo original é muito grande e não pode ser enviado.');
+          ctx.deleteMessage(message.message_id)
             .then(() => {
-              console.log(`Arquivo ${fileName} enviado com sucesso.`);
-            })
-            .catch((error) => {
-              console.error(`Erro ao enviar o arquivo: ${error}`);
-              ctx.reply(`${error}, deu ruim família.`);
-              ctx.deleteMessage(message.message_id);
+              fs.unlinkSync(fileName);
+              console.log(`Arquivo ${fileName} excluído com sucesso.`);
             });
-          return;
-        } catch (error) {
-          console.error(`Erro ao obter informações do link: ${error}`);
-          ctx.reply(`Ocorreu um erro ao obter informações do link.`);
-          ctx.deleteMessage(message.message_id);
-          return;
+        } else {
+          try {
+            const audio = fs.readFileSync(fileName);
+            // Envie o áudio com o nome de arquivo correto
+            ctx.replyWithAudio({ source: audio, filename: fileName }, { caption: `[🔗Fonte](${audioUrl})`, parse_mode: 'Markdown' })
+              .then(() => {
+                fs.unlinkSync(fileName);
+                console.log(`Arquivo ${fileName} excluído com sucesso.`);
+                ctx.deleteMessage(message.message_id);
+              })
+              .catch((error) => {
+                console.error(`Erro ao enviar o áudio: ${error}`);
+              });
+          } catch (error) {
+            console.error(`Erro ao ler o arquivo de áudio: ${error}`);
+          }
         }
+      } else {
+        await ctx.deleteMessage(message.message_id);
+        ctx.reply('Ocorreu um erro ao baixar o áudio.');
       }
-
-      const audio = fs.readFileSync(fileName);
-
-      // Enviando o áudio para o usuário e incluindo a legenda
-      ctx.replyWithAudio({ source: audio }, { caption: `[🔗Fonte](${videoUrl})`, parse_mode: 'Markdown' })
-        .then(() => {
-          fs.unlinkSync(fileName);
-          console.log(`Arquivo ${fileName} excluído com sucesso.`);
-          ctx.deleteMessage(message.message_id);
-        })
-        .catch((error) => {
-          console.error(`Erro ao enviar o áudio: ${error}`);
-        });
-    } else {
-      await ctx.deleteMessage(message.message_id);
-      ctx.reply('Ocorreu um erro ao baixar o áudio.');
-    }
-  });
+    });
+  } catch (error) {
+    console.error(`Erro ao obter informações do vídeo: ${error}`);
+    ctx.reply(`Ocorreu um erro ao obter informações do vídeo.`);
+    ctx.deleteMessage(message.message_id);
+  }
 };
