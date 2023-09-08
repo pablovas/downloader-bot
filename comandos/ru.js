@@ -41,13 +41,13 @@ module.exports = async (ctx) => {
 
     if (resultCC === 'Não há cardápio' && resultLago === 'Não há cardápio') {
       // Se ambos os resultados indicarem ausência de cardápio
-      await ctx.reply('Não há cardápio cadastrado nos RUs neste momento, tente novamente mais tarde ');    
+      await ctx.reply(`Não há cardápio cadastrado nos RUs neste momento, tente novamente mais tarde. `);
     } else if (resultLago === 'Não há cardápio') {
       // Se apenas o resultado2 indicar ausência de cardápio
-      await ctx.replyWithPhoto({ source: resultCC }, { caption: `Não há cardápio cadastrado no RU Lago neste momento, tente novamente mais tarde.`});
+      await ctx.replyWithPhoto({ source: resultCC }, { caption: `Não há cardápio cadastrado no ${captionLago} neste momento, tente novamente mais tarde.`, parse_mode: 'Markdown' });
     } else if (resultCC === 'Não há cardápio') {
       // Se apenas o resultado1 indicar ausência de cardápio
-      await ctx.replyWithPhoto({ source: resultLago }, { caption: `Não há cardápio cadastrado no RU CC neste momento, tente novamente mais tarde.`});
+      await ctx.replyWithPhoto({ source: resultLago }, { caption: `Não há cardápio cadastrado no ${captionCC} neste momento, tente novamente mais tarde.`, parse_mode: 'Markdown' });
     } else {
       // Se ambos os resultados contiverem capturas de tela válidas
       await ctx.replyWithPhoto({ source: resultCC }, { caption: `Para mais informações acesse: ${captionCC}`, parse_mode: 'Markdown' });
