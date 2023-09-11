@@ -68,35 +68,40 @@ const rl = readline.createInterface({
       rl.question('Qual elemento você deseja selecionar (digite o número)? ', async (userChoice) => {
         const choiceIndex = parseInt(userChoice, 10) - 1;
         if (choiceIndex >= 0 && choiceIndex < options.length) {
+          await accordionButtons[choiceIndex].scrollIntoViewIfNeeded();
           await accordionButtons[choiceIndex].click();
           console.log(`Você selecionou o elemento: ${options[choiceIndex]}`);
 
-          // Tirar um print do conteúdo da classe "accordion-item"
-          const accordionItemContent = await page.$('.accordion-item');
-          if (accordionItemContent) {
-            await accordionItemContent.screenshot({ path: 'accordion-item.png' });
-            console.log('Tirou um print do conteúdo da classe "accordion-item".');
-          } else {
-            console.log('Classe "accordion-item" não encontrada.');
-          }
-
-          if (choiceIndex === 1) {
+          if (choiceIndex === 0) {
+            // Se a opção 1 foi selecionada, capture o conteúdo da classe .accordion-item
+            const accordionItemElement = await page.waitForSelector('.accordion-item:visible');
+            if (accordionItemElement) {
+              await accordionItemElement.screenshot({ path: 'accordion-item.png' });
+              console.log('Tirou um print do conteúdo do elemento .accordion-item.');
+            } else {
+              console.log('Erro ao tirar um print do conteúdo do elemento .accordion-item.');
+            }
+          } else if (choiceIndex === 1) {
             // Se a opção 2 foi selecionada, clique nela novamente
+            await accordionButtons[choiceIndex].scrollIntoViewIfNeeded();
             await accordionButtons[choiceIndex].click();
             console.log('Clicou na opção 2 novamente.');
 
-            // Aguardar 2 segundos para garantir que o conteúdo seja carregado
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // Tirar um print do conteúdo da quarta vez que aparece a classe "accordion-item"
-            const accordionItemElements = await page.$$('.accordion-item');
-            // Tirar um print do conteúdo da classe "accordion-item"
-            const accordionItemContent = await page.$('.accordion-item');
-            if (accordionItemContent) {
-              await accordionItemContent.screenshot({ path: 'accordion-item.png' });
-              console.log('Tirou um print do conteúdo da classe "accordion-item".');
+            // Aguardar até que todos os elementos .accordion-body sejam visíveis e estáveis
+            const accordionBodyElements = await page.$$(
+              '.accordion-body:visible'
+            );
+            if (accordionBodyElements.length >= 2) {
+              await accordionBodyElements[1].screenshot({
+                path: 'accordion-body.png',
+              });
+              console.log(
+                'Tirou um print do conteúdo do segundo elemento .accordion-body.'
+              );
             } else {
-              console.log('Classe "accordion-item" não encontrada.');
+              console.log(
+                'Erro ao tirar um print do conteúdo do segundo elemento .accordion-body.'
+              );
             }
           }
         } else {
