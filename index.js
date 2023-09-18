@@ -25,7 +25,8 @@ bot.use(async (ctx, next) => {
         if (chat && chat.type === 'private' && chat.blocked) {
           console.log("O bot foi bloqueado pelo usuário.");
         } else {
-          await ctx.reply("Comando inválido. Use o comando /help para ver as instruções.");
+          await ctx.reply("Comando inválido. Use o comando /help para ver as instruções ou escute às instruções do áudio que se segue.");
+          await ctx.replyWithAudio({source: "./comandos/instructions.mp3"});
         }
       } catch (error) {
         // Lidar com erro ao verificar o status do chat

@@ -97,7 +97,7 @@ module.exports = async (ctx) => {
 
 
     if (await isWeekend()) {
-      caption = "Hoje não tem ônibus";
+      caption = "Hoje não tem ônibus.";
     } else if (horariosOceantec.includes(horarioProximo)) {
       caption += "\nO ônibus passará na Oceantec neste horário.";
     } else if (horariosEQA.includes(horarioProximo)) {
