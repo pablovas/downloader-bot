@@ -9,8 +9,10 @@ module.exports = async (ctx) => {
   const message = await ctx.reply('Por favor, aguarde enquanto baixamos o áudio.');
 
   let audioUrl = ctx.message.text.split(' ')[1];
-  if (!audioUrl) {
-    console.error('URL do vídeo não fornecida.');
+  if (!audioUrl || audioUrl.includes('t.me') || audioUrl.includes('threads.net')) {
+    console.error('URL do não reconhecida.');
+    ctx.deleteMessage(message.message_id);
+    ctx.reply('Por favor envie um link reconhecido, como links do Instagram, Pinterest, Tumblr, Youtube, TikTok ou Reddit.');
     return;
   }
 
@@ -88,8 +90,8 @@ module.exports = async (ctx) => {
       }
     });
   } catch (error) {
-    console.error(`Erro ao obter informações do vídeo: ${error}`);
-    ctx.reply(`Ocorreu um erro ao obter informações do vídeo.`);
+    console.error(`Erro ao obter informações do link: ${error}`);
+    ctx.reply(`Ocorreu um erro ao obter informações do link.`);
     ctx.deleteMessage(message.message_id);
   }
 };
