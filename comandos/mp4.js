@@ -8,7 +8,7 @@ module.exports = async (ctx) => {
   const message = await ctx.reply('Por favor, aguarde enquanto baixamos o vídeo.');
   // Obtendo a URL do vídeo a partir da mensagem enviada pelo usuário
   let videoUrl = ctx.message.text.split(' ')[1];
-  if (!videoUrl || audioUrl.includes('t.me')) {
+  if (!videoUrl || videoUrl.includes('t.me') || videoUrl.includes('threads.net')) {
     console.error('URL do não reconhecida.');
     ctx.deleteMessage(message.message_id);
     ctx.reply('Por favor envie um link reconhecido, como links do Instagram, Pinterest, Tumblr, Youtube, TikTok ou Reddit.');
