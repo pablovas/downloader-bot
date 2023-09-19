@@ -9,7 +9,7 @@ module.exports = async (ctx) => {
   const message = await ctx.reply('Por favor, aguarde enquanto baixamos o áudio.');
 
   let audioUrl = ctx.message.text.split(' ')[1];
-  if (!audioUrl || audioUrl.includes('t.me') || audioUrl.includes('threads.net')) {
+  if (!audioUrl || audioUrl.includes('t.me') || audioUrl.includes('threads.net') || audioUrl.includes('fb.watch')) {
     console.error('URL do não reconhecida.');
     ctx.deleteMessage(message.message_id);
     ctx.reply('Por favor envie um link reconhecido, como links do Instagram, Pinterest, Tumblr, Youtube, TikTok ou Reddit.');

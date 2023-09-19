@@ -6,9 +6,10 @@ const config = require('../config');
 module.exports = async (ctx) => {
   config.logInteraction(ctx, '/mp4');
   const message = await ctx.reply('Por favor, aguarde enquanto baixamos o vídeo.');
+
   // Obtendo a URL do vídeo a partir da mensagem enviada pelo usuário
   let videoUrl = ctx.message.text.split(' ')[1];
-  if (!videoUrl || videoUrl.includes('t.me') || videoUrl.includes('threads.net')) {
+  if (!videoUrl || videoUrl.includes('t.me') || videoUrl.includes('threads.net') || videoUrl.includes('fb.watch')) {
     console.error('URL do não reconhecida.');
     ctx.deleteMessage(message.message_id);
     ctx.reply('Por favor envie um link reconhecido, como links do Instagram, Pinterest, Tumblr, Youtube, TikTok ou Reddit.');
