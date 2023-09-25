@@ -27,7 +27,7 @@ module.exports = async (ctx) => {
     return dayOfWeek === 0 || dayOfWeek === 6; // Sunday or Saturday
   }
 
-  let horarios = ['06:50', '07:10', '07:30', '07:50', '08:15', '08:50', '09:30', '10:25', '11:05', '11:30', '12:00', '12:15', '12:45', '13:15', '13:40', '14:00', '14:50', '15:30', '16:00', '16:50', '17:30', '18:05', '18:30', '18:55', '19:20', '19:45', '20:25', '20:40', '21:35', '22:20', '22:45', '23:15'];
+  let horarios = ['07:15', '07:25', '07:45', '08:05', '08:30', '09:05', '09:45', '10:40', '11:20', '11:45', '12:15', '12:30', '13:00', '13:30', '13:55', '14:15', '15:05', '15:45', '16:15', '17:05', '17:45', '18:20', '18:45', '19:10', '19:35', '20:00', '20:40', '20:55', '21:50', '22:35', '23:00', '23:30'];
 
   // Obter o horário atual
   let horarioAtual = new Date();
@@ -59,10 +59,10 @@ module.exports = async (ctx) => {
   }
 
   // Horários específicos em que o ônibus passará na Oceantec
-  let horariosOceantec = ['07:50', '12:00', '12:45', '13:40', '18:05', '18:55'];
+  let horariosOceantec = ['08:05', '12:15', '13:00', '13:55', '18:20', '19:10'];
 
   // Horários específicos em que o ônibus sairá do EQA
-  let horariosEQA = ['21:35', '22:20', '22:45', '23:15'];
+  let horariosEQA = ['21:50', '22:35', '23:00', '23:30'];
 
   // Função para calcular a diferença de tempo em minutos
   function calculateTimeDifference(startTime, endTime) {
