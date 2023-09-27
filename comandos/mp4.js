@@ -44,11 +44,6 @@ module.exports = async (ctx) => {
   // Executando o comando 'yt-dlp' para baixar o vídeo
   const ytDlp = spawn('yt-dlp', ['-f', 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best', '-o', fileName, videoUrl]);
 
-  // Capturando a saída padrão do comando 'yt-dlp'
-  ytDlp.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
-  });
-
   // Capturando a saída de erro do comando 'yt-dlp'
   ytDlp.stderr.on('data', (data) => {
     console.error(`stderr: ${data}`);

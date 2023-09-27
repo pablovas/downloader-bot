@@ -45,10 +45,6 @@ module.exports = async (ctx) => {
 
     const ytDlp = spawn('yt-dlp', ['-x', '--audio-format', 'mp3', '--output', fileName, audioUrl]);
 
-    ytDlp.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
-    });
-
     ytDlp.stderr.on('data', (data) => {
       console.error(`stderr: ${data}`);
     });
