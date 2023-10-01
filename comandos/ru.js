@@ -2,7 +2,7 @@ const { chromium } = require('playwright');
 const config = require('../config');
 
 async function scrapeWebsite(url) {
-  const browser = await chromium.launch(); // Inicializa o navegador Chromium
+  const browser = await chromium.launch({headless: true}); // Inicializa o navegador Chromium
   const context = await browser.newContext(); // Cria um novo contexto de navegação
   const page = await context.newPage(); // Cria uma nova página dentro do contexto
   await page.goto(url , {waitUntil: 'domcontentloaded'}); // Navega para a URL fornecida
@@ -19,11 +19,18 @@ async function scrapeWebsite(url) {
   }
 
   const cardapioElement = await page.$('.col-sm-6'); // Localiza o elemento '.col-sm-6' na página
-  const screenshot = await cardapioElement.screenshot({ fullPage: true }); // Tira uma captura de tela do elemento
+  const dayWeek = await page.$('.date-slider-dayweek'); // Localiza o dia da semana no cardapio
+  if (dayWeek && cardapioElement) {
 
-  await browser.close(); // Fecha o navegador
+    const screenshot = await cardapioElement.screenshot({ fullPage: true }); // Tira uma captura de tela do elemento
 
-  return screenshot; // Retorna a captura de tela como resultado
+    await browser.close(); // Fecha o navegador
+
+    return screenshot; // Retorna a captura de tela como resultado
+  } else {
+    await browser.close(); // Fecha o navegador
+    return 'Não há cardápio'; // Retorna a string indicando a ausência de cardápio
+  }
 }
 
 module.exports = async (ctx) => {
