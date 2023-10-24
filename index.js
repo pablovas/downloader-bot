@@ -17,6 +17,7 @@ bot.use(async (ctx, next) => {
   const validCommands = ['/start', '/help', '/mp4', '/mp3', '/curto', '/micro', '/ru', '/erro', '/playlist'];
 
   if (ctx.message && ctx.message.text) {
+    config.logInteraction(ctx);
     const command = ctx.message.text.split(' ')[0];
 
     if (!validCommands.includes(command)) {
@@ -38,6 +39,7 @@ bot.use(async (ctx, next) => {
   } else {
     // Lidar com mensagens sem texto, se necessário
     ctx.reply("Por favor, envie um comando válido.");
+    config.logInteraction(ctx);
   }
 });
 

@@ -53,10 +53,10 @@ const rl = readline.createInterface({
     // Verificar quantos elementos têm a classe "accordion-button"
     const accordionButtons = await page.$$('.accordion-button');
 
-    if (accordionButtons.length >= 2) {
+    if (accordionButtons.length) {
       // Se houver dois ou mais elementos, apresentar apenas metade das opções ao usuário
       console.log(`Há ${accordionButtons.length} elementos com a classe "accordion-button".`);
-      console.log('Opções disponíveis (metade):');
+      console.log('Opções disponíveis: ');
       const options = await Promise.all(
         accordionButtons.slice(0, accordionButtons.length / 2).map(async (element, index) => {
           const optionText = await element.textContent();
