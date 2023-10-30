@@ -24,16 +24,34 @@ const rl = readline.createInterface({
       return (await element.textContent()).trim();
     })
   );
-
-  // Mostrar os números ao usuário
-  console.log('Números disponíveis:');
-  console.log(numbers.join(', '));
+  
+  // Obter todos os nomes com a tag 'span' na lista
+  const nameElements = await page.$$('.ng-option-label span');
+  const names = await Promise.all(
+    nameElements.map(async (element) => {
+      return (await element.textContent()).trim();
+    })
+  );
+  
+  // Verificar se o número de números e nomes é o mesmo
+  if (numbers.length === names.length) {
+    const listItems = [];
+    for (let i = 0; i < numbers.length; i++) {
+      listItems.push(`${numbers[i]} ${names[i]}`);
+    }
+  
+    // Mostrar os números e nomes ao usuário em uma lista não enumerada
+    console.log('Números disponíveis:');
+    listItems.forEach((item) => {
+      console.log(`- ${item}`);
+    });
+  }
 
   // Solicitar ao usuário que insira um número
   rl.question('Digite um número para consultar a linha: ', async (userNumber) => {
     // Verificar se o número existe na lista
     if (numbers.includes(userNumber)) {
-      console.log(`Você escolheu o número ${userNumber}.`);
+      console.log(`Você escolheu a linha de número ${userNumber}.`);
     } else {
       // Encontrar o número mais próximo ao valor inserido pelo usuário
       const closestNumber = findClosestNumber(userNumber, numbers);
@@ -70,7 +88,7 @@ const rl = readline.createInterface({
         if (choiceIndex >= 0 && choiceIndex < options.length) {
           await accordionButtons[choiceIndex].scrollIntoViewIfNeeded();
           await accordionButtons[choiceIndex].click();
-          console.log(`Você selecionou o elemento: ${options[choiceIndex]}`);
+          console.log(`Você selecionou: ${options[choiceIndex]}`);
 
           if (choiceIndex === 0) {
             // Após a opção 1 ser selecionada, edite o CSS e capture o conteúdo da classe .accordion-item
@@ -98,21 +116,24 @@ const rl = readline.createInterface({
             await accordionButtons[choiceIndex].click();
             console.log('Clicou na opção 2 novamente.');
 
+            const selectors = ['.p-sd-5', '#flush-collapse1'];
+            for (const selector of selectors) {
+              const element = await page.$(selector);
+              if (element) {
+                await element.evaluate((div) => {
+                  div.style.setProperty('height', '100%', 'important');
+                  div.style.setProperty('max-height', '100%', 'important');
+                });
+              }
+            }
+
             // Aguardar até que todos os elementos .accordion-body sejam visíveis e estáveis
-            const accordionBodyElements = await page.$$(
-              '.accordion-body:visible'
-            );
+            const accordionBodyElements = await page.$$('.accordion-item:visible');
             if (accordionBodyElements.length >= 2) {
-              await accordionBodyElements[1].screenshot({
-                path: 'accordion-body.png',
-              });
-              console.log(
-                'Tirou um print do conteúdo do segundo elemento .accordion-body.'
-              );
+              await accordionBodyElements[1].screenshot({path: 'accordion-body.png'});
+              console.log('Tirou um print do conteúdo do segundo elemento .accordion-body.');
             } else {
-              console.log(
-                'Erro ao tirar um print do conteúdo do segundo elemento .accordion-body.'
-              );
+              console.log('Erro ao tirar um print do conteúdo do segundo elemento .accordion-body.');
             }
           }
         } else {
