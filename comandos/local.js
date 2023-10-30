@@ -24,7 +24,7 @@ const rl = readline.createInterface({
       return (await element.textContent()).trim();
     })
   );
-  
+
   // Obter todos os nomes com a tag 'span' na lista
   const nameElements = await page.$$('.ng-option-label span');
   const names = await Promise.all(
@@ -32,16 +32,16 @@ const rl = readline.createInterface({
       return (await element.textContent()).trim();
     })
   );
-  
+
   // Verificar se o número de números e nomes é o mesmo
   if (numbers.length === names.length) {
     const listItems = [];
     for (let i = 0; i < numbers.length; i++) {
       listItems.push(`${numbers[i]} ${names[i]}`);
     }
-  
+
     // Mostrar os números e nomes ao usuário em uma lista não enumerada
-    console.log('Números disponíveis:');
+    console.log('Ónibus disponíveis:');
     listItems.forEach((item) => {
       console.log(`- ${item}`);
     });
@@ -51,7 +51,7 @@ const rl = readline.createInterface({
   rl.question('Digite um número para consultar a linha: ', async (userNumber) => {
     // Verificar se o número existe na lista
     if (numbers.includes(userNumber)) {
-      console.log(`Você escolheu a linha de número ${userNumber}.`);
+      console.log(`Você escolheu o ônibus da linha ${userNumber}.`);
     } else {
       // Encontrar o número mais próximo ao valor inserido pelo usuário
       const closestNumber = findClosestNumber(userNumber, numbers);
@@ -74,7 +74,7 @@ const rl = readline.createInterface({
     if (accordionButtons.length) {
       // Se houver dois ou mais elementos, apresentar apenas metade das opções ao usuário
       console.log(`Há ${accordionButtons.length} elementos com a classe "accordion-button".`);
-      console.log('Opções disponíveis: ');
+      console.log('Opções disponíveis de onde o ônibus sai: ');
       const options = await Promise.all(
         accordionButtons.slice(0, accordionButtons.length / 2).map(async (element, index) => {
           const optionText = await element.textContent();
@@ -102,7 +102,7 @@ const rl = readline.createInterface({
                 });
               }
             }
-            
+
             const accordionItemElement = await page.waitForSelector('.accordion-item:visible');
             if (accordionItemElement) {            
               await accordionItemElement.screenshot({ path: 'bus-table-print.png' });
@@ -144,7 +144,7 @@ const rl = readline.createInterface({
         rl.close();
       });
     } else {
-      console.log('Não há dois ou mais elementos com a classe "accordion-button".');
+      console.log('ERRO. Não há dois ou mais elementos com a classe "accordion-button".');
       await browser.close();
       rl.close();
     }
