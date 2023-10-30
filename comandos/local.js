@@ -73,16 +73,16 @@ const rl = readline.createInterface({
           console.log(`Você selecionou o elemento: ${options[choiceIndex]}`);
 
           if (choiceIndex === 0) {
-            // Se a opção 1 foi selecionada, capture o conteúdo da classe .accordion-item
+            // Após a opção ser selecionada, edite o CSS e capture o conteúdo da classe .accordion-item
             const accordionItemElement = await page.waitForSelector('.accordion-item:visible');
             if (accordionItemElement) {
               const preAccordionDiv = await page.$('.p-sd-5');
               if (preAccordionDiv) {
                 await preAccordionDiv.evaluate((div) => {
-                  div.style.setProperty('max-height', '3060px', 'important');
-                });
+                  div.style.setProperty('height', '100%', 'important');
+                  div.style.setProperty('max-height', '100%', 'important');                });
               }
-              
+
               const accordionDiv = await page.$('.s-locale');
               if (accordionDiv) {
                 await accordionDiv.evaluate((div) => {
@@ -90,7 +90,7 @@ const rl = readline.createInterface({
                   div.style.setProperty('max-height', '100%', 'important');
                 });
               }              
-              await accordionItemElement.screenshot({ path: 'accordion-item.png' });
+              await accordionItemElement.screenshot({ path: 'bus-table-print.png' });
               console.log('Tirou um print do conteúdo do elemento .accordion-item.');
             } else {
               console.log('Erro ao tirar um print do conteúdo do elemento .accordion-item.');
