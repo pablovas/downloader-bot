@@ -76,6 +76,20 @@ const rl = readline.createInterface({
             // Se a opção 1 foi selecionada, capture o conteúdo da classe .accordion-item
             const accordionItemElement = await page.waitForSelector('.accordion-item:visible');
             if (accordionItemElement) {
+              const preAccordionDiv = await page.$('.p-sd-5');
+              if (preAccordionDiv) {
+                await preAccordionDiv.evaluate((div) => {
+                  div.style.setProperty('max-height', '3060px', 'important');
+                });
+              }
+              
+              const accordionDiv = await page.$('.s-locale');
+              if (accordionDiv) {
+                await accordionDiv.evaluate((div) => {
+                  div.style.setProperty('height', '100%', 'important');
+                  div.style.setProperty('max-height', '100%', 'important');
+                });
+              }              
               await accordionItemElement.screenshot({ path: 'accordion-item.png' });
               console.log('Tirou um print do conteúdo do elemento .accordion-item.');
             } else {
