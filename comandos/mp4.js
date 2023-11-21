@@ -1,10 +1,8 @@
 const { spawn } = require('child_process');
 const fs = require('fs');
 const ytdl = require('ytdl-core');
-const config = require('../config');
 
 module.exports = async (ctx) => {
-  config.logInteraction(ctx, '/mp4');
   const message = await ctx.reply('Por favor, aguarde enquanto baixamos o vídeo.');
 
   // Obtendo a URL do vídeo a partir da mensagem enviada pelo usuário

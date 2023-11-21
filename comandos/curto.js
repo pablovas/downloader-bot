@@ -1,5 +1,4 @@
 const axios = require('axios');
-const config = require('../config');
 
 // Função para encurtar o URL usando a API do is.gd
 async function shortenUrl(url) {
@@ -9,7 +8,6 @@ async function shortenUrl(url) {
 }
 
 module.exports = async (ctx) => {
-  config.logInteraction(ctx, '/curto');
   const longUrl = ctx.message.text.split(' ')[1]; // Obtém o URL longo a partir da mensagem recebida
 
   try {

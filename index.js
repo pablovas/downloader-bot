@@ -18,9 +18,9 @@ bot.use(async (ctx, next) => {
 
   if (ctx.message && ctx.message.text) {
     config.logInteraction(ctx);
-    const command = ctx.message.text.split(' ')[0];
+    const command = ctx.message.text.split(' ')[0].toLowerCase();
 
-    if (!validCommands.includes(command)) {
+    if (!validCommands.map(cmd => cmd.toLowerCase()).includes(command)) {
       try {
         const chat = await ctx.getChat();
         if (chat && chat.type === 'private' && chat.blocked) {
@@ -75,13 +75,12 @@ bot.command('help', (ctx) => {
 });
 
 // Registrar os comandos
-bot.command('mp4', mp4);
-bot.command('mp3', mp3);
-bot.command('curto', curto);
-bot.command('micro', micro);
-bot.command('ru', ru);
-// bot.command('local', local);
-bot.command('erro', error);
+bot.command(['mp4', 'MP4'], mp4);
+bot.command(['mp3', 'MP3'], mp3);
+bot.command(['curto', 'CURTO'], curto);
+bot.command(['micro', 'MICRO'], micro);
+bot.command(['ru', 'RU'], ru);
+// bot.command(['local', 'LOCAL'], local);
 
 // Iniciando o bot
 bot.launch();

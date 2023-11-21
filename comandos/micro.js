@@ -1,5 +1,4 @@
 const { chromium } = require('playwright');
-const config = require('../config');
 
 async function scrapeWebsite() {
   const browser = await chromium.launch(); // Inicializa o navegador Chromium
@@ -17,7 +16,6 @@ async function scrapeWebsite() {
 }
 
 module.exports = async (ctx) => {
-  config.logInteraction(ctx, '/micro');
   const message = await ctx.reply('Por favor, aguarde breves momentos enquanto provemos a ti a distinta tabela...');
   
   // Função para verificar se é fim de semana

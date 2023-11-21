@@ -2,10 +2,8 @@ const { spawn } = require('child_process');
 const fs = require('fs');
 const axios = require('axios');
 const sanitize = require('sanitize-filename');
-const config = require('../config');
 
 module.exports = async (ctx) => {
-  config.logInteraction(ctx, '/mp3');
   const message = await ctx.reply('Por favor, aguarde enquanto baixamos o áudio.');
 
   let audioUrl = ctx.message.text.split(' ')[1];

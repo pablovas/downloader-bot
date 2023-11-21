@@ -1,5 +1,4 @@
 const { chromium } = require('playwright');
-const config = require('../config');
 
 async function scrapeWebsite(url) {
   const browser = await chromium.launch({headless: true}); // Inicializa o navegador Chromium
@@ -34,7 +33,6 @@ async function scrapeWebsite(url) {
 }
 
 module.exports = async (ctx) => {
-  config.logInteraction(ctx, '/ru');
   const message = await ctx.reply('Por favor, aguarde breves momentos enquanto provemos a ti o distinto cardápio...');
 
   try {

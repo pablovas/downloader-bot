@@ -3,7 +3,6 @@ const sharp = require('sharp');
 const config = require('../config');
 
 module.exports = async (ctx) => {
-  config.logInteraction(ctx, '/erro');
   try {
     if (ctx.from.id != config.ownerID ){
       ctx.reply('Você não tem permissão para executar este comando.');
