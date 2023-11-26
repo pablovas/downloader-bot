@@ -8,7 +8,7 @@ module.exports = async (ctx) => {
       ctx.reply('Você não tem permissão para executar este comando.');
     } else {
       desktopCapture().then(async (imgPath) => {
-        const resizedImage = await sharp(imgPath).resize(1600).toBuffer();
+        const resizedImage = await sharp(imgPath).toBuffer();
   
         const compressedImage = await sharp(resizedImage).jpeg({ quality: 100 }).toBuffer();
   

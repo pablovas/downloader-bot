@@ -14,7 +14,7 @@ const bot = new Telegraf(config.botToken);
 
 // Middleware para lidar com comandos não reconhecidos
 bot.use(async (ctx, next) => {
-  const validCommands = ['/start', '/help', '/mp4', '/mp3', '/curto', '/micro', '/ru', '/erro', '/playlist'];
+  const validCommands = ['/start', '/help', '/mp4', '/mp3', '/curto', '/micro', '/ru', '/erro'];
 
   if (ctx.message && ctx.message.text) {
     config.logInteraction(ctx);
@@ -80,6 +80,7 @@ bot.command(['mp3', 'MP3'], mp3);
 bot.command(['curto', 'CURTO'], curto);
 bot.command(['micro', 'MICRO'], micro);
 bot.command(['ru', 'RU'], ru);
+bot.command(['erro', 'ERRO'], error);
 // bot.command(['local', 'LOCAL'], local);
 
 // Iniciando o bot
