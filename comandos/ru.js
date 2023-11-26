@@ -5,7 +5,7 @@ async function scrapeWebsite(url) {
   const context = await browser.newContext(); // Cria um novo contexto de navegação
   const page = await context.newPage(); // Cria uma nova página dentro do contexto
   await page.goto(url , {waitUntil: 'domcontentloaded'}); // Navega para a URL fornecida
-  await page.waitForSelector('.col-sm-6'); // Aguarda a existência do seletor '.col-sm-6' na página
+  await page.waitForSelector('.cardapio'); // Aguarda a existência do seletor '.cardapio' na página
 
   const hasCardapio = await page.$eval('.panel-heading.custom-panel__heading', (element) => {
     // Verifica se o texto "Não há cardápio cadastrado para exibição no momento." está presente no elemento '.panel-heading.custom-panel__heading'
@@ -17,7 +17,7 @@ async function scrapeWebsite(url) {
     return 'Não há cardápio'; // Retorna a string indicando a ausência de cardápio
   }
 
-  const cardapioElement = await page.$('.col-sm-6'); // Localiza o elemento '.col-sm-6' na página
+  const cardapioElement = await page.$('.cardapio'); // Localiza o elemento '.cardapio' na página
   const dayWeek = await page.$('.date-slider-dayweek'); // Localiza o dia da semana no cardapio
   if (dayWeek && cardapioElement) {
 
