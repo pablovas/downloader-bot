@@ -18,9 +18,9 @@ bot.use(async (ctx, next) => {
 
   if (ctx.message && ctx.message.text) {
     config.logInteraction(ctx);
-    const command = ctx.message.text.split(' ')[0].toLowerCase();
+    const command = ctx.message.text.split(' ')[0];
 
-    if (!validCommands.map(cmd => cmd.toLowerCase()).includes(command)) {
+    if (!validCommands.includes(command)) {
       try {
         const chat = await ctx.getChat();
         if (chat && chat.type === 'private' && chat.blocked) {
