@@ -20,18 +20,10 @@ bot.use(async (ctx, next) => {
     config.logInteraction(ctx);
     const command = ctx.message.text.split(' ')[0];
     const toLowerCaseCommand = command.toLowerCase();
+    const enabledSocialMediaDownload = command.includes('youtube.com') || command.includes('youtu.be') || command.includes('x.com') || command.includes('twitter.com') || command.includes('instagram.com') || command.includes('tiktok.com');
 
-    if (!validCommands.includes(toLowerCaseCommand)) {
+    if (!validCommands.includes(toLowerCaseCommand) && validCommands.includes(enabledSocialMediaDownload)) {
       try {
-        
-        // Baixa vídeo e áudio se o usuário apenas enviar um link compatível
-        if(command.includes('youtube.com') || command.includes('youtu.be') || command.includes('x.com') || command.includes('twitter.com') || command.includes('instagram.com') || command.includes('tiktok.com')){
-          mp4(ctx);
-          mp3(ctx);
-        } else {
-          next();
-        }
-
         //Mensagem do middleware
         const chat = await ctx.getChat();
         if (chat && chat.type === 'private' && chat.blocked) {
@@ -45,6 +37,13 @@ bot.use(async (ctx, next) => {
         console.error("Erro ao verificar o status do chat:", error.message);
       }
     } else {
+      // Baixa vídeo e áudio se o usuário apenas enviar um link compatível
+      if(enabledSocialMediaDownload){
+        mp4(ctx);
+        mp3(ctx);
+      } else {
+        next();
+      }
       next();
     }
   } else {
