@@ -6,21 +6,22 @@ const mp3 = require('./comandos/mp3');
 const curto = require('./comandos/curto');
 const micro = require('./comandos/micro');
 const ru = require('./comandos/ru');
-// const local = require('./comandos/local');
 const error = require('./comandos/error');
+// const local = require('./comandos/local');
 
 // Criando uma nova instância do bot com o token fornecido
 const bot = new Telegraf(config.botToken);
 
 // Middleware para lidar com comandos não reconhecidos
 bot.use(async (ctx, next) => {
-  const validCommands = ['/start', '/help', '/mp4', '/mp3', '/curto', '/micro', '/ru', '/erro', '/playlist'];
+  const validCommands = ['/start', '/help', '/mp4', '/mp3', '/curto', '/micro', '/ru', '/erro'];
 
   if (ctx.message && ctx.message.text) {
     config.logInteraction(ctx);
     const command = ctx.message.text.split(' ')[0];
+    const toLowerCaseCommand = command.toLowerCase();
 
-    if (!validCommands.includes(command)) {
+    if (!validCommands.includes(toLowerCaseCommand)) {
       try {
         const chat = await ctx.getChat();
         if (chat && chat.type === 'private' && chat.blocked) {
@@ -75,11 +76,12 @@ bot.command('help', (ctx) => {
 });
 
 // Registrar os comandos
-bot.command(['mp4', 'MP4'], mp4);
-bot.command(['mp3', 'MP3'], mp3);
-bot.command(['curto', 'CURTO'], curto);
-bot.command(['micro', 'MICRO'], micro);
-bot.command(['ru', 'RU'], ru);
+bot.command(['mp4', 'MP4', 'Mp4'], mp4);
+bot.command(['mp3', 'MP3', 'Mp3'],mp3);
+bot.command(['curto', 'CURTO', 'Curto'], curto);
+bot.command(['micro', 'MICRO', 'Micro'], micro);
+bot.command(['ru', 'RU', 'Ru', 'rU'], ru);
+bot.command(['erro', 'ERRO'], error);
 // bot.command(['local', 'LOCAL'], local);
 
 // Iniciando o bot
