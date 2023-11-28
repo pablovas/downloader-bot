@@ -7,6 +7,7 @@ const curto = require('./comandos/curto');
 const micro = require('./comandos/micro');
 const ru = require('./comandos/ru');
 const error = require('./comandos/error');
+const playlist = require('./comandos/playlist');
 // const local = require('./comandos/local');
 
 // Criando uma nova instância do bot com o token fornecido
@@ -14,7 +15,7 @@ const bot = new Telegraf(config.botToken);
 
 // Middleware para lidar com comandos não reconhecidos
 bot.use(async (ctx, next) => {
-  const validCommands = ['/start', '/help', '/mp4', '/mp3', '/curto', '/micro', '/ru', '/erro'];
+  const validCommands = ['/start', '/help', '/mp4', '/mp3', '/curto', '/micro', '/ru', '/erro', '/playlist'];
 
   if (ctx.message && ctx.message.text) {
     config.logInteraction(ctx);
@@ -41,8 +42,6 @@ bot.use(async (ctx, next) => {
       if(enabledSocialMediaDownload){
         mp4(ctx);
         mp3(ctx);
-      } else {
-        next();
       }
       next();
     }
@@ -69,6 +68,8 @@ bot.command('help', (ctx) => {
   
   /mp4 <URL> - Baixa o vídeo de uma rede social (ex.: Youtube, Instagram, Twitter, TikTok e outros). 🎬
 
+  /playlist <URL> - Baixa uma playlist de músicas direto do YouTube. 📺
+
   ⚠️ DEVIDO A RECENTES ALTERAÇÕES NA API DO TWITTER, O DOWNLOAD PODE APRESENTAR INSTABILIDADES ⚠️
   
   /curto <URL> - Encurta um link. 🔗
@@ -91,6 +92,7 @@ bot.command(['curto', 'CURTO', 'Curto'], curto);
 bot.command(['micro', 'MICRO', 'Micro'], micro);
 bot.command(['ru', 'RU', 'Ru', 'rU'], ru);
 bot.command(['erro', 'ERRO'], error);
+bot.command(['playlist', 'PLAYLIST', 'Playlist'], playlist);
 // bot.command(['local', 'LOCAL'], local);
 
 // Iniciando o bot
