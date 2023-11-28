@@ -6,7 +6,12 @@ const sanitize = require('sanitize-filename');
 module.exports = async (ctx) => {
   const message = await ctx.reply('Por favor, aguarde enquanto baixamos o áudio.');
 
-  let audioUrl = ctx.message.text.split(' ')[1];
+  if(ctx.message.text.includes('mp3' || 'MP3' || 'Mp3' || 'mP3')){
+    var audioUrl = ctx.message.text.split(' ')[1];
+  } else {
+    var audioUrl = ctx.message.text;
+  }
+
   if (!audioUrl || audioUrl.includes('t.me') || audioUrl.includes('threads.net') || audioUrl.includes('fb.watch')) {
     console.error('URL do não reconhecida.');
     ctx.deleteMessage(message.message_id);

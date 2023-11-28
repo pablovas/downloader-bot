@@ -6,7 +6,12 @@ module.exports = async (ctx) => {
   const message = await ctx.reply('Por favor, aguarde enquanto baixamos o vídeo.');
 
   // Obtendo a URL do vídeo a partir da mensagem enviada pelo usuário
-  let videoUrl = ctx.message.text.split(' ')[1];
+  if(ctx.message.text.includes('mp4' || 'MP4' || 'Mp4' || 'mP4')){
+    var videoUrl = ctx.message.text.split(' ')[1];
+  } else {
+    var videoUrl = ctx.message.text;
+  }
+  
   if (!videoUrl || videoUrl.includes('t.me') || videoUrl.includes('threads.net') || videoUrl.includes('fb.watch')) {
     console.error('URL do não reconhecida.');
     ctx.deleteMessage(message.message_id);

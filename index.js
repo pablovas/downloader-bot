@@ -23,6 +23,16 @@ bot.use(async (ctx, next) => {
 
     if (!validCommands.includes(toLowerCaseCommand)) {
       try {
+        
+        // Baixa vídeo e áudio se o usuário apenas enviar um link compatível
+        if(command.includes('youtube.com') || command.includes('youtu.be') || command.includes('x.com') || command.includes('twitter.com') || command.includes('instagram.com') || command.includes('tiktok.com')){
+          mp4(ctx);
+          mp3(ctx);
+        } else {
+          next();
+        }
+
+        //Mensagem do middleware
         const chat = await ctx.getChat();
         if (chat && chat.type === 'private' && chat.blocked) {
           console.log("O bot foi bloqueado pelo usuário.");
@@ -77,7 +87,7 @@ bot.command('help', (ctx) => {
 
 // Registrar os comandos
 bot.command(['mp4', 'MP4', 'Mp4'], mp4);
-bot.command(['mp3', 'MP3', 'Mp3'],mp3);
+bot.command(['mp3', 'MP3', 'Mp3'], mp3);
 bot.command(['curto', 'CURTO', 'Curto'], curto);
 bot.command(['micro', 'MICRO', 'Micro'], micro);
 bot.command(['ru', 'RU', 'Ru', 'rU'], ru);
