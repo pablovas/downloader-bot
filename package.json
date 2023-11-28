@@ -7,7 +7,7 @@
     "puppeteer": "^20.9.0",
     "sanitize-filename": "^1.6.3",
     "screenshot-desktop": "^1.15.0",
-    "sharp": "^0.32.6",
+    "sharp": "^0.32.4",
     "telegraf": "^3.40.0",
     "ytdl-core": "^4.11.5",
     "ytpl": "^2.3.0"
