@@ -48,19 +48,16 @@ bot.use(async (ctx, next) => {
   } else {
     // Lidar com mensagens sem texto, se necessário
     ctx.reply("Por favor, envie um comando válido.");
-    config.logInteraction(ctx);
   }
 });
 
 // Iniciar o bot
 bot.start((ctx) => {
-  config.logInteraction(ctx);
   ctx.reply('Bem-vindo! Use o comando /help para ver as instruções.');
 });
 
 // Lidar com o comando /help
 bot.command('help', (ctx) => {
-  config.logInteraction(ctx, '/help');
   const helpMessage = `
   🤖 Bem-vindo ao bot! Aqui estão as instruções disponíveis:
 
