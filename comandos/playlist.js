@@ -71,10 +71,9 @@ module.exports = async (ctx) => {
           });
       } catch (error) {
         if (error.statusCode === 410) {
-          console.log(`Vídeo indisponível: ${video.title}, pulando para o próximo.`);
-          ctx.reply(`O vídeo "${video.title}" está indisponível, pulando para o próximo.`);
+          console.log(`Vídeo indisponível: ${video.title} está indisponível para download no momento, pulando para o próximo.`);
+          ctx.reply(`O vídeo "${video.title}" está indisponível para download no momento, pulando para o próximo.`);
         } else {
-          console.error(`Erro ao baixar o vídeo: ${video.title}, pulando para o próximo.`);
           console.error(error);
         }
       }
