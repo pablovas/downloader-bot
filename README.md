@@ -7,7 +7,7 @@ To run this project you will need a `config.js` file like this one in the root o
 
 
 ```bash
-  module.exports = {
+module.exports = {
   botToken: 'Your_bot_token',
   ownerID: 'Your_ID',
   logInteraction: function(ctx) {
