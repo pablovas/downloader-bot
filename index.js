@@ -41,7 +41,9 @@ bot.use(async (ctx, next) => {
       // Baixa vídeo e áudio se o usuário apenas enviar um link compatível
       if(enabledSocialMediaDownload){
         mp4(ctx);
-        mp3(ctx);
+        if(command.includes('youtube.com') || command.includes('youtu.be')){
+          mp3(ctx);
+        }
       }
       next();
     }
