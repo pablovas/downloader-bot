@@ -106,5 +106,22 @@ bot.command(['erro', 'ERRO'], error);
 bot.command(['playlist', 'PLAYLIST', 'Playlist'], playlist);
 // bot.command(['local', 'LOCAL'], local);
 
+// Error handling
+bot.catch((error) => {
+  if (error instanceof TelegramError) {
+    const { code, description } = error;
+    if (code === 403 && description.includes('the group chat was deleted')) {
+      console.error('Group chat was deleted. Handle this situation appropriately.');
+      // You may want to log this event or take other actions as needed.
+    } else {
+      console.error('TelegramError:', error);
+      // Handle other Telegram errors as needed.
+    }
+  } else {
+    console.error('Unexpected error:', error);
+    // Handle other unexpected errors.
+  }
+});
+
 // Iniciando o bot
 bot.launch();
