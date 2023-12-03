@@ -25,23 +25,13 @@ bot.use(async (ctx, next) => {
 
     if (!validCommands.includes(toLowerCaseCommand) && validCommands.includes(enabledSocialMediaDownload)) {
       try {
-        // Mensagem do middleware
+        //Mensagem do middleware
         const chat = await ctx.getChat();
         if (chat && chat.type === 'private' && chat.blocked) {
           console.log("O bot foi bloqueado pelo usuário.");
         } else {
-          // Verificar se o grupo ainda existe antes de interagir com ele
-          try {
-            const groupInfo = await ctx.getChat();
-            if (groupInfo) {
-              await ctx.reply("Comando inválido. Use o comando /help para ver as instruções ou escute às instruções do áudio que se segue.");
-              await ctx.replyWithAudio({ source: "./comandos/instructions.mp3" });
-            } else {
-              console.log("O grupo não existe mais.");
-            }
-          } catch (error) {
-            console.error("Erro ao verificar o status do chat:", error.message);
-          }
+          await ctx.reply("Comando inválido. Use o comando /help para ver as instruções ou escute às instruções do áudio que se segue.");
+          await ctx.replyWithAudio({source: "./comandos/instructions.mp3"});
         }
       } catch (error) {
         // Lidar com erro ao verificar o status do chat
@@ -49,9 +39,9 @@ bot.use(async (ctx, next) => {
       }
     } else {
       // Baixa vídeo e áudio se o usuário apenas enviar um link compatível
-      if (enabledSocialMediaDownload) {
+      if(enabledSocialMediaDownload){
         mp4(ctx);
-        if (command.includes('youtube.com') || command.includes('youtu.be')) {
+        if(command.includes('youtube.com') || command.includes('youtu.be')){
           mp3(ctx);
         }
       }
