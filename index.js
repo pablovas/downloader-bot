@@ -21,7 +21,7 @@ bot.use(async (ctx, next) => {
     config.logInteraction(ctx);
     const command = ctx.message.text.split(' ')[0];
     const toLowerCaseCommand = command.toLowerCase();
-    const enabledSocialMediaDownload = command.includes('youtube.com') || command.includes('youtu.be') || command.includes('x.com') || command.includes('twitter.com') || command.includes('instagram.com') || command.includes('tiktok.com');
+    const enabledSocialMediaDownload = command.includes('youtube.com') || command.includes('youtu.be') || command.includes('x.com') || command.includes('twitter.com') || command.includes('instagram.com') || command.includes('tiktok.com') || command.includes('reddit.com');
 
     if (!validCommands.includes(toLowerCaseCommand) && validCommands.includes(enabledSocialMediaDownload)) {
       try {
