@@ -88,7 +88,6 @@ module.exports = async (ctx) => {
             .catch((error) => {
               console.error(`Erro ao enviar o arquivo: ${error}`);
               ctx.reply(`${error}, deu ruim família.`);
-              ctx.deleteMessage(message.message_id);
             });
           return;
         } catch (error) {
