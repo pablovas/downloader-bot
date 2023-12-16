@@ -23,7 +23,7 @@ bot.use(async (ctx, next) => {
     const toLowerCaseCommand = command.toLowerCase();
     const enabledSocialMediaDownload = command.includes('youtube.com') || command.includes('youtu.be') || command.includes('x.com') || command.includes('twitter.com') || command.includes('instagram.com') || command.includes('tiktok.com') || command.includes('reddit.com');
 
-    if (!validCommands.includes(toLowerCaseCommand) && validCommands.includes(enabledSocialMediaDownload)) {
+    if (!validCommands.includes(toLowerCaseCommand) && !enabledSocialMediaDownload) {
       try {
         //Mensagem do middleware
         const chat = await ctx.getChat();
