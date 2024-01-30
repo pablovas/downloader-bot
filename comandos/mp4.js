@@ -45,7 +45,7 @@ module.exports = async (ctx) => {
   const caption = `[🔗Fonte](${videoUrl})`;
 
   // Executando o comando 'yt-dlp' para baixar o vídeo
-  const ytDlp = spawn('yt-dlp', ['-f', 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best', '-o', fileName, videoUrl]);
+  const ytDlp = spawn('yt-dlp', ['-f', '[filesize<49M]bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best', '--merge-output-format', 'mp4', '-o', fileName, videoUrl]);
 
   // Capturando a saída de erro do comando 'yt-dlp'
   ytDlp.stderr.on('data', (data) => {
@@ -111,6 +111,7 @@ module.exports = async (ctx) => {
         })
         .catch((error) => {
           console.error(`Erro ao enviar o arquivo: ${error}`);
+          ctx.reply('Ocorreu um erro ao baixar o vídeo. Tente novamente mais tarade.');
         });
     } else {
       // Caso ocorra um erro ao baixar o vídeo
