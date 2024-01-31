@@ -45,7 +45,12 @@ module.exports = async (ctx) => {
   const caption = `[🔗Fonte](${videoUrl})`;
 
   // Executando o comando 'yt-dlp' para baixar o vídeo
-  const ytDlp = spawn('yt-dlp', ['-f', '[filesize<49M]bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best', '--merge-output-format', 'mp4', '-o', fileName, videoUrl]);
+  const ytDlp = spawn('yt-dlp', ['-f', 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best', '-o', fileName, videoUrl]);
+
+  // Capturando a saída padrão do comando 'yt-dlp'
+  ytDlp.stdout.on('data', (data) => {
+    //console.log(`stdout: ${data}`);
+  });
 
   // Capturando a saída de erro do comando 'yt-dlp'
   ytDlp.stderr.on('data', (data) => {
@@ -63,7 +68,7 @@ module.exports = async (ctx) => {
 
       if (fileSizeInMB > 49) {
         // Se o arquivo for muito grande, envia uma mensagem informando ao usuário
-        ctx.reply('Desculpe. O arquivo original é muito grande e não pode ser enviado.')
+        const lowResolution = await ctx.reply('O arquivo original é muito grande e não pode ser enviado. Tentando enviar o mesmo vídeo em menor resolução...')
         ctx.deleteMessage(message.message_id)
           .then(() => {
             // Exclui o arquivo baixado
@@ -84,10 +89,12 @@ module.exports = async (ctx) => {
           ctx.replyWithVideo({ source: video }, { caption: caption, parse_mode: 'Markdown' })
             .then(() => {
               console.log(`Arquivo ${fileName} enviado com sucesso.`);
+              ctx.deleteMessage(lowResolution.message_id);
             })
             .catch((error) => {
               console.error(`Erro ao enviar o arquivo: ${error}`);
               ctx.reply(`${error}, deu ruim família.`);
+              ctx.deleteMessage(message.message_id);
             });
           return;
         } catch (error) {
