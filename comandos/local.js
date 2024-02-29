@@ -68,8 +68,9 @@ const rl = readline.createInterface({
     // Aguardar 5 segundos
     await new Promise(resolve => setTimeout(resolve, 5000));
 
-    // Verificar quantos elementos têm a classe "accordion-button"
+    // Verificar quantos elementos têm a classe "accordion-button" e se "accordion-item" está visível
     const accordionButtons = await page.$$('.accordion-button');
+    const accordionItemVisible = await page.waitForSelector('.accordion-item:visible');
 
     if (accordionButtons.length) {
       // Se houver dois ou mais elementos, apresentar apenas metade das opções ao usuário
@@ -103,9 +104,8 @@ const rl = readline.createInterface({
               }
             }
 
-            const accordionItemElement = await page.waitForSelector('.accordion-item:visible');
-            if (accordionItemElement) {            
-              await accordionItemElement.screenshot({ path: 'bus-table-print.png' });
+            if (accordionItemVisible) {            
+              await accordionItemVisible.screenshot({ path: 'bus-table-print.png' });
               console.log('Tirou um print do conteúdo do elemento .accordion-item.');
             } else {
               console.log('Erro ao tirar um print do conteúdo do elemento .accordion-item.');

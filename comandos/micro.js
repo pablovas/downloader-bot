@@ -104,6 +104,8 @@ module.exports = async (ctx) => {
       caption += "\nO ônibus sairá do Predio 4 como de praste.";
     }
 
+    caption += "\n\n ⚠️ Os horários podem sofrer alterações, confira a tabela antes de qualquer coisa! ⚠️", {parse_mode: 'MarkdownV2'};
+
     await ctx.replyWithPhoto({source: screenshot}, {caption: caption}); // Envia a captura de tela como uma imagem de resposta
     await ctx.deleteMessage(message.message_id); // Deleta a mensagem anterior
 

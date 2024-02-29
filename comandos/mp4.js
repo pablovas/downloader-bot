@@ -118,7 +118,7 @@ module.exports = async (ctx) => {
         })
         .catch((error) => {
           console.error(`Erro ao enviar o arquivo: ${error}`);
-          ctx.reply('Ocorreu um erro ao baixar o vídeo. Tente novamente mais tarade.');
+          ctx.reply('Ocorreu um erro ao baixar o vídeo. Tente novamente mais tarde.');
         });
     } else {
       // Caso ocorra um erro ao baixar o vídeo
