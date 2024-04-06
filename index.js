@@ -16,14 +16,14 @@ const bot = new Telegraf(config.botToken);
 
 const limitConfig = {
   window: 3000,
-  limit: 1,
-  onLimitExceeded: (ctx, next) => {
-    ctx.reply('Rate limit excedido. Você não poderá gerar mais comandos pelos próximos 5 minutos 😡');
+  limit: 2,
+  onLimitExceeded: (async(ctx, next) => {
+    await ctx.reply('Rate limit excedido. Você não poderá gerar mais comandos pelos próximos 5 minutos 😡');
     ctx.skip = true; // Ignore messages from the user for the next 5 minutes
     setTimeout(() => {
       ctx.skip = false; // Reset the skip flag after 5 minutes
     }, 300000);
-  }
+  })
 }
 bot.use(rateLimit(limitConfig));
 
@@ -44,7 +44,14 @@ bot.use(async (ctx, next) => {
         if (chat && chat.type === 'private' && chat.blocked) {
           console.log("O bot foi bloqueado pelo usuário.");
         } else {
-          await ctx.reply("Comando inválido. Use o comando /help para ver as instruções.");
+          try {
+          } catch (error) {
+            if (error.code === 403) {
+              console.log("O bot foi bloqueado pelo usuário.");
+            } else {
+              console.error("Erro ao enviar mensagem:", error.message);
+            }
+          }
         }
       } catch (error) {
         // Lidar com erro ao verificar o status do chat
@@ -66,17 +73,17 @@ bot.use(async (ctx, next) => {
     }
   } else {
     // Lidar com mensagens sem texto, se necessário
-    ctx.reply("Por favor, envie um comando válido.");
+    await ctx.reply("Por favor, envie um comando válido.");
   }
 });
 
 // Iniciar o bot
-bot.start((ctx) => {
-  ctx.reply('Bem-vindo! Use o comando /help para ver as instruções.');
+bot.start(async (ctx) => {
+  await ctx.reply('Bem-vindo! Use o comando /help para ver as instruções.');
 });
 
 // Lidar com o comando /help
-bot.command('help', (ctx) => {
+bot.command('help', async(ctx) => {
   const helpMessage = `
   🤖 Bem-vindo ao bot! Aqui estão as instruções disponíveis:
 
@@ -98,7 +105,7 @@ bot.command('help', (ctx) => {
   
   Aproveite as funcionalidades do nosso bot! 🤩✨
   `;
-  ctx.replyWithMarkdown(helpMessage);
+  await ctx.replyWithMarkdown(helpMessage);
 });
 
 // Registrar os comandos

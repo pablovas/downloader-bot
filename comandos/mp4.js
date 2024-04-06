@@ -15,7 +15,7 @@ module.exports = async (ctx) => {
   if (!videoUrl || videoUrl.includes('t.me') || videoUrl.includes('threads.net') || videoUrl.includes('fb.watch')) {
     console.error('URL do não reconhecida.');
     ctx.deleteMessage(message.message_id);
-    ctx.reply('Por favor envie um link reconhecido, como links do Instagram, Pinterest, Tumblr, Youtube, TikTok ou Reddit.');
+    await ctx.reply('Por favor envie um link reconhecido, como links do Instagram, Pinterest, Tumblr, Youtube, TikTok ou Reddit.');
     return;
   }
 
@@ -99,20 +99,20 @@ module.exports = async (ctx) => {
           const video = ytdl(videoUrl, { quality: '18' });
   
           // Enviando o vídeo para o usuário
-          ctx.replyWithVideo({ source: video }, { caption: caption, parse_mode: 'Markdown' })
+          await ctx.replyWithVideo({ source: video }, { caption: caption, parse_mode: 'Markdown' })
             .then(() => {
               console.log(`Arquivo ${fileName} enviado com sucesso.`);
               ctx.deleteMessage(lowResolution.message_id);
             })
-            .catch((error) => {
+            .catch(async (error) => {
               console.error(`Erro ao enviar o arquivo: ${error}`);
-              ctx.reply(`${error}, deu ruim família.`);
+              await ctx.reply(`${error}, deu ruim família.`);
               ctx.deleteMessage(message.message_id);
             });
           return;
         } catch (error) {
           console.error(`Erro ao obter informações do link: ${error}`);
-          ctx.reply(`Ocorreu um erro ao obter informações do link.`);
+          await ctx.reply(`Ocorreu um erro ao obter informações do link.`);
           ctx.deleteMessage(message.message_id);
           return;
         }
@@ -122,21 +122,21 @@ module.exports = async (ctx) => {
       const video = fs.readFileSync(fileName);
 
       // Enviando o vídeo para o usuário
-      ctx.replyWithVideo({ source: video }, { caption: caption, parse_mode: 'Markdown' })
+      await ctx.replyWithVideo({ source: video }, { caption: caption, parse_mode: 'Markdown' })
         .then(() => {
           // Excluindo o arquivo após o envio
           fs.unlinkSync(fileName);
           console.log(`Arquivo ${fileName} excluído com sucesso.`);
           ctx.deleteMessage(message.message_id);
         })
-        .catch((error) => {
+        .catch(async (error) => {
           console.error(`Erro ao enviar o arquivo: ${error}`);
-          ctx.reply('Ocorreu um erro ao baixar o vídeo. Tente novamente mais tarde.');
+          await ctx.reply('Ocorreu um erro ao baixar o vídeo. Tente novamente mais tarde.');
         });
     } else {
       // Caso ocorra um erro ao baixar o vídeo
       await ctx.deleteMessage(message.message_id);
-      ctx.reply('Ocorreu um erro ao baixar o vídeo.');
+      await ctx.reply('Ocorreu um erro ao baixar o vídeo.');
     }
   });
 };

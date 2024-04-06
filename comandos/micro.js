@@ -102,6 +102,6 @@ module.exports = async (ctx) => {
   } catch (error) {
     console.error('Ocorreu um erro durante o web scraping:', error);
     await ctx.deleteMessage(message.message_id);
-    ctx.reply('Desculpe, ocorreu um erro durante o web scraping.'); // Retorna uma mensagem de erro em caso de exceção
+    await ctx.reply('Desculpe, ocorreu um erro durante o web scraping.'); // Retorna uma mensagem de erro em caso de exceção
   }
 };

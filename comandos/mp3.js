@@ -19,19 +19,19 @@ module.exports = async (ctx) => {
     const stream = ytdl(audioUrl, { quality: 'highestaudio',filter: 'audioonly' });
 
     // Enviando o áudio para o usuário
-    ctx.replyWithAudio({ source: stream, filename: fileName })
+    await ctx.replyWithAudio({ source: stream, filename: fileName })
       .then(() => {
         ctx.deleteMessage(message.message_id);
         console.log(`Arquivo ${fileName} enviado com sucesso.`);
       })
-      .catch((error) => {
+      .catch(async(error) => {
         ctx.deleteMessage(message.message_id);
         console.error(`Erro ao enviar o arquivo: ${error}`);
-        ctx.reply(`${error}, deu ruim família.`);
+        await ctx.reply(`${error}, deu ruim família.`);
       });
   } catch (error) {
     ctx.deleteMessage(message.message_id);
     console.error(`Erro ao obter informações do link: ${error}`);
-    ctx.reply(`Ocorreu um erro ao obter informações do da música. Envie novamente um link do YouTube.`);
+    await ctx.reply(`Ocorreu um erro ao obter informações do da música. Envie novamente um link do YouTube.`);
   }
 };

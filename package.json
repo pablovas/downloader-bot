@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "all": "^0.0.0",
     "axios": "^1.4.0",
     "child_process": "^1.0.2",
     "node-telegram-bot-api": "^0.61.0",
@@ -9,6 +10,7 @@
     "screenshot-desktop": "^1.15.0",
     "sharp": "^0.32.4",
     "telegraf": "^3.40.0",
+    "telegraf-ratelimit": "^2.0.0",
     "ytdl-core": "^4.11.5",
     "ytpl": "^2.3.0"
   }

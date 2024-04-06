@@ -12,10 +12,10 @@ module.exports = async (ctx) => {
 
   try {
     const shortenedUrl = await shortenUrl(longUrl); // Encurta o URL usando a função shortenUrl
-    ctx.replyWithHTML(`<a href="${shortenedUrl}">${shortenedUrl}</a>`, { disable_web_page_preview: true });
+    await ctx.replyWithHTML(`<a href="${shortenedUrl}">${shortenedUrl}</a>`, { disable_web_page_preview: true });
     // Envia a resposta contendo o URL encurtado como um link HTML
     // O disable_web_page_preview é definido como true para evitar que a visualização da página seja exibida pelo Telegram
   } catch (error) {
-    ctx.reply('Ocorreu um erro ao encurtar o link.'); // Retorna uma mensagem de erro em caso de exceção
+    await ctx.reply('Ocorreu um erro ao encurtar o link.'); // Retorna uma mensagem de erro em caso de exceção
   }
 };

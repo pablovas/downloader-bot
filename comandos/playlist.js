@@ -45,7 +45,7 @@ module.exports = async (ctx) => {
           writeStream.on('error', reject);
         });
 
-        ctx.replyWithDocument({ source: filePath, filename: fileName })
+        await ctx.replyWithDocument({ source: filePath, filename: fileName })
           .then(() => {
             fs.rmSync(filePath); // Remover o arquivo MP3 após enviar
 
@@ -59,12 +59,12 @@ module.exports = async (ctx) => {
               }, 10000);
             }
           })
-          .catch((error) => {
+          .catch(async (error) => {
             if (error.response && error.response.error_code === 413) {
               // Arquivo muito grande, enviar mensagem de erro
               console.error(`Arquivo muito grande: ${fileName}`);
               ctx.deleteMessage(message.message_id);
-              ctx.reply(`A música "${videoTitle}" não foi enviada devido ao seu tamanho ser muito grande.`);
+              await ctx.reply(`A música "${videoTitle}" não foi enviada devido ao seu tamanho ser muito grande.`);
             } else {
               console.error(`Erro ao enviar o arquivo: ${fileName}`);
               console.error(error);
@@ -74,7 +74,7 @@ module.exports = async (ctx) => {
         if (error.statusCode === 410) {
           console.log(`Vídeo indisponível: ${video.title} está indisponível para download no momento, pulando para o próximo.`);
           ctx.deleteMessage(message.message_id);
-          ctx.reply(`O vídeo "${video.title}" está indisponível para download no momento, pulando para o próximo.`);
+          await ctx.reply(`O vídeo "${video.title}" está indisponível para download no momento, pulando para o próximo.`);
         } else {
           console.error(error);
         }
@@ -82,12 +82,12 @@ module.exports = async (ctx) => {
     }
 
     ctx.deleteMessage(message.message_id);
-    setTimeout(() => {
-        ctx.reply('Playlist enviada com sucesso!');
+    setTimeout(async() => {
+      await ctx.reply('Playlist enviada com sucesso!');
     }, 5000);
   } catch (error) {
     ctx.deleteMessage(message.message_id);
     console.error(`Erro ao obter informações da playlist: ${error}`);
-    ctx.reply('Ocorreu um erro ao obter informações da playlist. Verifique o link e tente novamente.');
+    await ctx.reply('Ocorreu um erro ao obter informações da playlist. Verifique o link e tente novamente.');
   }
 };
