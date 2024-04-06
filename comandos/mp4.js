@@ -19,6 +19,19 @@ module.exports = async (ctx) => {
     return;
   }
 
+  // Faz nome unico para videos
+  function makeVideoName(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+  }
+
   // Remove trackers do link
   const questionMarkIndex = videoUrl.indexOf('?');
   const commercialMarkIndex = videoUrl.indexOf('&');
@@ -39,7 +52,7 @@ module.exports = async (ctx) => {
   }
 
   // Definindo o nome do arquivo de saída como 'video.mp4'
-  const fileName = 'video.mp4';
+  const fileName = `${makeVideoName(5)}.mp4`;
 
   // Criando a legenda que será exibida junto com o vídeo
   const caption = `[🔗Fonte](${videoUrl})`;

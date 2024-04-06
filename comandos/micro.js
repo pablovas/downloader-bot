@@ -7,7 +7,7 @@ async function scrapeWebsite() {
   await page.goto('https://www.furg.br/horarios-do-onibus-interno', {waitUntil: 'domcontentloaded'}); // Navega para a URL fornecida
   await page.waitForSelector('tbody'); // Aguarda a existência do seletor 'tbody' na página
   const tabelaElement = await page.$('tbody'); // Localiza o elemento 'tbody' na página
-  await page.waitForTimeout(5000); // Atraso de 5 segundos (5000 milissegundos)
+  //await page.waitForTimeout(2000); // Aguarda que os conteudos no cardapio sejam inicializados (se existirem)
   const screenshot = await tabelaElement.screenshot({ fullPage: true }); // Tira uma captura de tela do elemento
   const tdElements = await page.$$eval('tbody td', tds => tds.map(td => td.textContent.trim())); // Procura em cada elemento td tabela (tbody) e os coloca em uma lista em forma de string
 

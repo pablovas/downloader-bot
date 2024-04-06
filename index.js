@@ -8,10 +8,24 @@ const micro = require('./comandos/micro');
 const ru = require('./comandos/ru');
 const error = require('./comandos/error');
 const playlist = require('./comandos/playlist');
+const rateLimit = require('telegraf-ratelimit');
 // const local = require('./comandos/local');
 
 // Criando uma nova instância do bot com o token fornecido
 const bot = new Telegraf(config.botToken);
+
+const limitConfig = {
+  window: 3000,
+  limit: 1,
+  onLimitExceeded: (ctx, next) => {
+    ctx.reply('Rate limit excedido. Você não poderá gerar mais comandos pelos próximos 5 minutos 😡');
+    ctx.skip = true; // Ignore messages from the user for the next 5 minutes
+    setTimeout(() => {
+      ctx.skip = false; // Reset the skip flag after 5 minutes
+    }, 300000);
+  }
+}
+bot.use(rateLimit(limitConfig));
 
 // Middleware para lidar com comandos não reconhecidos
 bot.use(async (ctx, next) => {
@@ -25,26 +39,29 @@ bot.use(async (ctx, next) => {
 
     if (!validCommands.includes(toLowerCaseCommand) && !enabledSocialMediaDownload) {
       try {
-        //Mensagem do middleware
+        // Mensagem do middleware
         const chat = await ctx.getChat();
         if (chat && chat.type === 'private' && chat.blocked) {
           console.log("O bot foi bloqueado pelo usuário.");
         } else {
-          await ctx.reply("Comando inválido. Use o comando /help para ver as instruções ou escute às instruções do áudio que se segue.");
-          await ctx.replyWithAudio({source: "./comandos/instructions.mp3"});
+          await ctx.reply("Comando inválido. Use o comando /help para ver as instruções.");
         }
       } catch (error) {
         // Lidar com erro ao verificar o status do chat
         console.error("Erro ao verificar o status do chat:", error.message);
       }
     } else {
+      // Criação de filas para paralelismo
+      const commandPromises = [];
       // Baixa vídeo e áudio se o usuário apenas enviar um link compatível
-      if(enabledSocialMediaDownload){
-        mp4(ctx);
-        if(command.includes('youtube.com') || command.includes('youtu.be')){
-          mp3(ctx);
+      if (enabledSocialMediaDownload) {
+        commandPromises.push(mp4(ctx));
+        if (command.includes('youtube.com') || command.includes('youtu.be')) {
+          commandPromises.push(mp3(ctx));
         }
       }
+
+      await Promise.all(commandPromises);
       next();
     }
   } else {
@@ -96,3 +113,8 @@ bot.command(['playlist', 'PLAYLIST', 'Playlist'], playlist);
 
 // Iniciando o bot
 bot.launch();
+bot.startPolling();
+
+// Enable graceful stop
+process.once('SIGINT', () => bot.stop('SIGINT'))
+process.once('SIGTERM', () => bot.stop('SIGTERM'))

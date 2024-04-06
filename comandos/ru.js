@@ -5,7 +5,7 @@ async function scrapeWebsite(url) {
   const context = await browser.newContext(); // Cria um novo contexto de navegação
   const page = await context.newPage(); // Cria uma nova página dentro do contexto
   await page.goto(url , {waitUntil: 'domcontentloaded'}); // Navega para a URL fornecida
-  await page.waitForTimeout(3000); // Aguarda que os conteudos no cardapio sejam inicializados (se existirem)
+  await page.waitForTimeout(2000); // Aguarda que os conteudos no cardapio sejam inicializados (se existirem)
   await page.waitForSelector('.cardapio'); // Aguarda a existência do seletor '.cardapio' na página
 
   const hasCardapio = await page.$eval('.panel-heading.custom-panel__heading', (element) => {
