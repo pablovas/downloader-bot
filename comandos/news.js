@@ -45,17 +45,16 @@ module.exports = async (ctx) => {
             const titulo = titulos[i];
 
             if (dataItem === hoje) {
-                await ctx.reply(`[${titulo}](https://www.furg.br${linkTitulo})`, { parse_mode: 'Markdown' });
+                await ctx.reply(`${hoje} [${titulo}](https://www.furg.br${linkTitulo})`, { parse_mode: 'Markdown' });
             }
 
             if (dataItem === diaAnteriorFormatado) {
-                await ctx.reply(`[${titulo}](https://www.furg.br${linkTitulo})`, { parse_mode: 'Markdown' });
+                await ctx.reply(`${diaAnteriorFormatado} [${titulo}](https://www.furg.br${linkTitulo})`, { parse_mode: 'Markdown' });
             }
         }
 
     } catch (error) {
         console.error(`Erro ao processar a página: ${error.message}`);
-        await ctx.reply(`Ocorreu um erro ao processar a página. ${error.message}`);
     }
     await ctx.deleteMessage(message.message_id);
 };
