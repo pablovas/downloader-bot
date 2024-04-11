@@ -100,7 +100,7 @@ module.exports = async (ctx) => {
       proximo = 'Não há mais horários hoje';
     }
 
-    let caption = `🚌 Próximo horário: ${horarioProximo}\nTempo até o próximo ônibus: ${tempoFaltaTexto}\nMas tem outro no horário de ${proximo}`;
+    let caption = `🚌 Próximo horário: ${horarioProximo}\nTempo até o próximo ônibus: ${tempoFaltaTexto}\n⚠️Mas tem outro ${proximo}`;
 
     if (await isWeekend()) {
       caption = "Hoje não tem ônibus.";
