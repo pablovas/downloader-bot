@@ -91,8 +91,16 @@ module.exports = async (ctx) => {
       }
     }
 
-    let caption = `🚌 Próximo horário: ${horarioProximo}\nTempo até o próximo ônibus: ${tempoFaltaTexto}`;
+    let indiceAtual = horarios.indexOf(horarioProximo);
+    let proximo;
 
+    if (indiceAtual !== -1 && indiceAtual < horarios.length - 1) {
+      proximo = horarios[indiceAtual + 1];
+    } else {
+      proximo = 'Não há mais horários hoje';
+    }
+
+    let caption = `🚌 Próximo horário: ${horarioProximo}\nTempo até o próximo ônibus: ${tempoFaltaTexto}\nMas tem outro no horário de ${proximo}`;
 
     if (await isWeekend()) {
       caption = "Hoje não tem ônibus.";
