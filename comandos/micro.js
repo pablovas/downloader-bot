@@ -24,6 +24,10 @@ module.exports = async (ctx) => {
 
     // atribui a variavel horarios à lista formada por tdElements
     let horarios = tdElements
+    horarios = horarios
+      .map(horario => horario.replace(/\*/g, '').replace(/ \(saída EQA\)/g, ''))
+      .filter(horario => horario.trim() !== '')
+      .sort();
       
     // Função para verificar se é fim de semana
     async function isWeekend() {
