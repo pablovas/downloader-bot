@@ -7,7 +7,7 @@ const rl = readline.createInterface({
 });
 
 (async () => {
-  const browser = await chromium.launch({ headless: true });
+  const browser = await chromium.launch({ headless: false });
   const page = await browser.newPage();
   await page.goto('https://painel.mobilibus.com/bus2you/home?p=3c19y', { waitUntil: 'domcontentloaded' });
 
@@ -66,7 +66,7 @@ const rl = readline.createInterface({
     await page.keyboard.press('Enter');
 
     // Aguardar 5 segundos
-    await new Promise(resolve => setTimeout(resolve, 5000));
+    await new Promise(resolve => setTimeout(resolve, 2500));
 
     // Verificar quantos elementos têm a classe "accordion-button" e se "accordion-item" está visível
     const accordionButtons = await page.$$('.accordion-button');

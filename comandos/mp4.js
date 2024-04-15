@@ -12,10 +12,10 @@ module.exports = async (ctx) => {
     var videoUrl = ctx.message.text;
   }
   
-  if (!videoUrl || videoUrl.includes('t.me') || videoUrl.includes('threads.net') || videoUrl.includes('fb.watch')) {
+  if (!videoUrl || videoUrl.includes('t.me') || videoUrl.includes('threads.net') || videoUrl.includes('fb.watch') || videoUrl.includes('facebook.com') || videoUrl.includes('stories')){
     console.error('URL do não reconhecida.');
     ctx.deleteMessage(message.message_id);
-    await ctx.reply('Por favor envie um link reconhecido, como links do Instagram, Pinterest, Tumblr, Youtube, TikTok ou Reddit.');
+    await ctx.reply('Por favor envie um link reconhecido, como links do Instagram, Pinterest, Tumblr, Youtube, TikTok ou Reddit. Facebook e stories não são suportados.');
     return;
   }
 
