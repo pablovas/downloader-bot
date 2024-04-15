@@ -113,6 +113,7 @@ module.exports = async (ctx) => {
         } catch (error) {
           console.error(`Erro ao obter informações do link: ${error}`);
           await ctx.reply(`Ocorreu um erro ao obter informações do link.`);
+          await ctx.reply('Por favor envie um link reconhecido, como links do Instagram, Pinterest, Tumblr, Youtube, TikTok ou Reddit. Facebook e stories não são suportados.');
           ctx.deleteMessage(message.message_id);
           return;
         }
