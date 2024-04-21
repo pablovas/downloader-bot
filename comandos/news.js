@@ -39,18 +39,26 @@ module.exports = async (ctx) => {
         const diaAnterior = new Date(Date.now() - 86400000);
         const diaAnteriorFormatado = `${diaAnterior.getDate()}/0${diaAnterior.getMonth() + 1}/${diaAnterior.getFullYear()}`;
 
+        let contadorNoticias = 0;
+        const ultimasNoticias = [];
+
         for (let i = 0; i < detalhes.length; i++) {
             const dataItem = dataItens[i];
             const linkTitulo = linkTitulos[i];
             const titulo = titulos[i];
 
-            if (dataItem === hoje) {
-                await ctx.reply(`${hoje} [${titulo}](https://www.furg.br${linkTitulo})`, { parse_mode: 'Markdown' });
+            if (dataItem === hoje || dataItem === diaAnteriorFormatado) {
+                await ctx.reply(`${dataItem} [${titulo}](https://www.furg.br${linkTitulo})`, { parse_mode: 'Markdown' });
+                contadorNoticias++;
+            } else if (contadorNoticias < 3) {
+                ultimasNoticias.push({ dataItem, linkTitulo, titulo });
             }
+        }
 
-            if (dataItem === diaAnteriorFormatado) {
-                await ctx.reply(`${diaAnteriorFormatado} [${titulo}](https://www.furg.br${linkTitulo})`, { parse_mode: 'Markdown' });
-            }
+        for (let i = 0; i < ultimasNoticias.length && contadorNoticias < 3; i++) {
+            const { dataItem, linkTitulo, titulo } = ultimasNoticias[i];
+            await ctx.reply(`${dataItem} [${titulo}](https://www.furg.br${linkTitulo})`, { parse_mode: 'Markdown' });
+            contadorNoticias++;
         }
 
     } catch (error) {
