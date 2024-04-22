@@ -39,6 +39,7 @@ bot.use(async (ctx, next) => {
     const enabledSocialMediaDownload = command.includes('youtube.com') || command.includes('youtu.be') || command.includes('x.com') || command.includes('twitter.com') || command.includes('instagram.com') || command.includes('tiktok.com') || command.includes('reddit.com');
 
     if (!validCommands.includes(toLowerCaseCommand) && !enabledSocialMediaDownload) {
+      await ctx.reply("Por favor, envie um comando válido.");
       try {
         // Mensagem do middleware
         const chat = await ctx.getChat();
@@ -72,9 +73,6 @@ bot.use(async (ctx, next) => {
       await Promise.all(commandPromises);
       next();
     }
-  } else {
-    // Lidar com mensagens sem texto, se necessário
-    await ctx.reply("Por favor, envie um comando válido.");
   }
 });
 
