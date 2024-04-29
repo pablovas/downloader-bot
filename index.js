@@ -11,6 +11,7 @@ const error = require('./comandos/error');
 const playlist = require('./comandos/playlist');
 const rateLimit = require('telegraf-ratelimit');
 // const local = require('./comandos/local');
+const localin = require('./comandos/localin');
 
 // Criando uma nova instância do bot com o token fornecido
 const bot = new Telegraf(config.botToken);
@@ -30,7 +31,7 @@ bot.use(rateLimit(limitConfig));
 
 // Middleware para lidar com comandos não reconhecidos
 bot.use(async (ctx, next) => {
-  const validCommands = ['/start', '/help', '/mp4', '/mp3', '/curto', '/micro', '/ru', '/erro', '/playlist', '/news'];
+  const validCommands = ['/start', '/help', '/mp4', '/mp3', '/curto', '/micro', '/ru', '/erro', '/playlist', '/news', '/localin'];
 
   if (ctx.message && ctx.message.text) {
     config.logInteraction(ctx);
@@ -119,6 +120,7 @@ bot.command(['erro', 'ERRO'], error);
 bot.command(['playlist', 'PLAYLIST', 'Playlist'], playlist);
 bot.command(['news', 'NEWS'], news);
 // bot.command(['local', 'LOCAL'], local);
+bot.command(['localin', 'LOCALIN'], localin);
 
 // Iniciando o bot
 bot.launch();
