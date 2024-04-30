@@ -4,13 +4,9 @@ const config = require('./config');
 const mp4 = require('./comandos/mp4');
 const mp3 = require('./comandos/mp3');
 const curto = require('./comandos/curto');
-const micro = require('./comandos/micro');
-const ru = require('./comandos/ru');
-const news = require('./comandos/news');
 const error = require('./comandos/error');
 const playlist = require('./comandos/playlist');
 const rateLimit = require('telegraf-ratelimit');
-// const local = require('./comandos/local');
 
 // Criando uma nova instância do bot com o token fornecido
 const bot = new Telegraf(config.botToken);
@@ -30,7 +26,7 @@ bot.use(rateLimit(limitConfig));
 
 // Middleware para lidar com comandos não reconhecidos
 bot.use(async (ctx, next) => {
-  const validCommands = ['/start', '/help', '/mp4', '/mp3', '/curto', '/micro', '/ru', '/erro', '/playlist', '/news'];
+  const validCommands = ['/start', '/help', '/mp4', '/mp3', '/curto', '/erro', '/playlist'];
 
   if (ctx.message && ctx.message.text) {
     config.logInteraction(ctx);
@@ -96,15 +92,6 @@ bot.command('help', async(ctx) => {
   
   /curto <URL> - Encurta um link. 🔗
   
-  🎓 Se você estuda na FURG, existem comandos relevantes como:
-  
-  /ru - Mostra os cardápios dos RUs quando disponíveis. 🍲
-  
-  /micro - Mostra os horários do ônibus interno. 🚌
-  
-  /news - Mostra as notícias mais recentes da FURG. 📰
-  
-  Aproveite as funcionalidades do nosso bot! 🤩✨
   `;
   await ctx.replyWithMarkdown(helpMessage);
 });
@@ -113,12 +100,8 @@ bot.command('help', async(ctx) => {
 bot.command(['mp4', 'MP4', 'Mp4'], mp4);
 bot.command(['mp3', 'MP3', 'Mp3'], mp3);
 bot.command(['curto', 'CURTO', 'Curto'], curto);
-bot.command(['micro', 'MICRO', 'Micro'], micro);
-bot.command(['ru', 'RU', 'Ru', 'rU'], ru);
 bot.command(['erro', 'ERRO'], error);
 bot.command(['playlist', 'PLAYLIST', 'Playlist'], playlist);
-bot.command(['news', 'NEWS'], news);
-// bot.command(['local', 'LOCAL'], local);
 
 // Iniciando o bot
 bot.launch();
