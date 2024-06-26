@@ -57,8 +57,16 @@ module.exports = async (ctx) => {
   // Criando a legenda que será exibida junto com o vídeo
   const caption = `[🔗Fonte](${videoUrl})`;
 
-  // Executando o comando 'yt-dlp' para baixar o vídeo
-  const ytDlp = spawn('yt-dlp', ['-f', 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best', '-o', fileName, videoUrl]);
+  // Definindo o caminho do arquivo de cookies para um local acessível
+  const cookiesPath = '../cookies.txt';
+
+  // Executando o comando 'yt-dlp' para baixar o vídeo, incluindo o arquivo de cookies
+  const ytDlp = spawn('yt-dlp', [
+    '--cookies', cookiesPath,
+    '-f', 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
+    '-o', fileName,
+    videoUrl
+  ]);
 
   // Capturando a saída padrão do comando 'yt-dlp'
   ytDlp.stdout.on('data', (data) => {
