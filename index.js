@@ -14,15 +14,28 @@ const bot = new Telegraf(config.botToken);
 const limitConfig = {
   window: 3000,
   limit: 2,
-  onLimitExceeded: (async(ctx, next) => {
-    await ctx.reply('Rate limit excedido. Você não poderá gerar mais comandos pelos próximos 5 minutos 😡');
+  onLimitExceeded: async (ctx, next) => {
+    try {
+      await ctx.reply('Rate limit excedido. Você não poderá gerar mais comandos pelos próximos 5 minutos 😡');
+    } catch (err) {
+      handleBotErrors(err, ctx);
+    }
     ctx.skip = true; // Ignore messages from the user for the next 5 minutes
     setTimeout(() => {
       ctx.skip = false; // Reset the skip flag after 5 minutes
     }, 300000);
-  })
-}
+  }
+};
 bot.use(rateLimit(limitConfig));
+
+// Função para lidar com erros do bot
+const handleBotErrors = (err, ctx) => {
+  if (err.code === 403) {
+    console.log(`Bot foi removido do grupo ou bloqueado pelo usuário: ${ctx.chat.id}`);
+  } else {
+    console.error("Erro inesperado:", err.message);
+  }
+};
 
 // Middleware para lidar com comandos não reconhecidos
 bot.use(async (ctx, next) => {
@@ -30,55 +43,46 @@ bot.use(async (ctx, next) => {
 
   if (ctx.message && ctx.message.text) {
     config.logInteraction(ctx);
-    const command = ctx.message.text.split(' ')[0];
-    const toLowerCaseCommand = command.toLowerCase();
-    const enabledSocialMediaDownload = command.includes('youtube.com') || command.includes('youtu.be') || command.includes('x.com') || command.includes('twitter.com') || command.includes('instagram.com') || command.includes('tiktok.com') || command.includes('reddit.com');
+    const command = ctx.message.text.split(' ')[0].toLowerCase();
+    const enabledSocialMediaDownload = ['youtube.com', 'youtu.be', 'x.com', 'twitter.com', 'instagram.com', 'tiktok.com', 'reddit.com']
+      .some(domain => ctx.message.text.includes(domain));
 
-    if (!validCommands.includes(toLowerCaseCommand) && !enabledSocialMediaDownload) {
-      await ctx.reply("Por favor, envie um comando válido.");
+    if (!validCommands.includes(command) && !enabledSocialMediaDownload) {
       try {
-        // Mensagem do middleware
-        const chat = await ctx.getChat();
-        if (chat && chat.type === 'private' && chat.blocked) {
-          console.log("O bot foi bloqueado pelo usuário.");
-        } else {
-          try {
-          } catch (error) {
-            if (error.code === 403) {
-              console.log("O bot foi bloqueado pelo usuário.");
-            } else {
-              console.error("Erro ao enviar mensagem:", error.message);
-            }
-          }
-        }
-      } catch (error) {
-        // Lidar com erro ao verificar o status do chat
-        console.error("Erro ao verificar o status do chat:", error.message);
+        await ctx.reply("Por favor, envie um comando válido.");
+      } catch (err) {
+        handleBotErrors(err, ctx);
       }
     } else {
-      // Criação de filas para paralelismo
       const commandPromises = [];
-      // Baixa vídeo e áudio se o usuário apenas enviar um link compatível
       if (enabledSocialMediaDownload) {
         commandPromises.push(mp4(ctx));
-        if (command.includes('youtube.com') || command.includes('youtu.be')) {
+        if (ctx.message.text.includes('youtube.com') || ctx.message.text.includes('youtu.be')) {
           commandPromises.push(mp3(ctx));
         }
       }
 
-      await Promise.all(commandPromises);
-      next();
+      try {
+        await Promise.all(commandPromises);
+        next();
+      } catch (err) {
+        handleBotErrors(err, ctx);
+      }
     }
   }
 });
 
 // Iniciar o bot
 bot.start(async (ctx) => {
-  await ctx.reply('Bem-vindo! Use o comando /help para ver as instruções.');
+  try {
+    await ctx.reply('Bem-vindo! Use o comando /help para ver as instruções.');
+  } catch (err) {
+    handleBotErrors(err, ctx);
+  }
 });
 
 // Lidar com o comando /help
-bot.command('help', async(ctx) => {
+bot.command('help', async (ctx) => {
   const helpMessage = `
   🤖 Bem-vindo ao bot! Aqui estão as instruções disponíveis:
 
@@ -93,7 +97,11 @@ bot.command('help', async(ctx) => {
   /curto <URL> - Encurta um link. 🔗
   
   `;
-  await ctx.replyWithMarkdown(helpMessage);
+  try {
+    await ctx.replyWithMarkdown(helpMessage);
+  } catch (err) {
+    handleBotErrors(err, ctx);
+  }
 });
 
 // Registrar os comandos
@@ -108,5 +116,5 @@ bot.launch();
 bot.startPolling();
 
 // Enable graceful stop
-process.once('SIGINT', () => bot.stop('SIGINT'))
-process.once('SIGTERM', () => bot.stop('SIGTERM'))
+process.once('SIGINT', () => bot.stop('SIGINT'));
+process.once('SIGTERM', () => bot.stop('SIGTERM'));
